@@ -3,3 +3,5 @@ dist-types
 node_modules
 bundled.*
 .edgespec
+.vscode
+.aider*
