@@ -32,6 +32,7 @@ If you want to add WinterSpec to an existing project, check out [this recipe](./
 ## Usage
 
 - [Routes](./docs/routes.md) ⭐
+- [Bun/Node Usage, Test Fixturing](./docs/bun-node-usage.md)
 - [Middleware](./docs/middleware.md)
 - [Global route config](./docs/global-route-config.md)
 - [Code generation (typings & OpenAPI)](./docs/code-generation.md)

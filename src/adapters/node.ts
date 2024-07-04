@@ -44,6 +44,14 @@ export const startServer: WinterSpecAdapter<
   return server
 }
 
+export const startServerFromRoutesDir = async (
+  routesDirPath: string,
+  opts: WinterSpecNodeAdapterOptions
+) => {
+  const winterSpec = await createWinterSpecBundleFromDir(routesDirPath, {})
+  return startServer(winterSpec, opts)
+}
+
 export const createMakeRequestFromDir = async (dirPath: string) => {
   const winterSpec = await createWinterSpecBundleFromDir(dirPath, {})
 
