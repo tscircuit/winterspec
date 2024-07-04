@@ -4,8 +4,8 @@ import {
   WinterSpecRouteBundle,
 } from "src/types/winter-spec.js"
 import { createWinterSpecFromRouteMap } from "./create-node-server-from-route-map.js"
-import { getRandomId } from "src/util/get-random-id.js"
 import { WinterSpecConfig } from "src/config/config.js"
+import { join } from "node:path"
 
 export const createWinterSpecBundleFromDir = async (
   dirPath: string,
@@ -16,7 +16,7 @@ export const createWinterSpecBundleFromDir = async (
   const routeMap = Object.fromEntries(
     await Promise.all(
       Object.entries(routeMapPaths).map(async ([route, { relativePath }]) => {
-        return [route, await import(relativePath)]
+        return [route, await import(join(dirPath, relativePath))]
       })
     )
   )
