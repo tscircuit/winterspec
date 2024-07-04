@@ -5,7 +5,7 @@ import { Writable } from "node:stream"
 export const getTestCLI = async (t: ExecutionContext) => {
   return {
     executeCommand: (args: string[]) => {
-      t.log(`Executing CLI command: edgespec ${args.join(" ")}`)
+      t.log(`Executing CLI command: winterspec ${args.join(" ")}`)
 
       const logStream = new Writable({
         write(chunk, _, done) {

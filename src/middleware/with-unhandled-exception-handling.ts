@@ -11,7 +11,7 @@ export const withUnhandledExceptionHandling: Middleware<{
 
     if ("_isHttpException" in e) {
       logger.warn(
-        "Caught unhandled HTTP exception thrown by EdgeSpec provided middleware. Consider adding createWithDefaultExceptionHandling middleware to your global or route spec."
+        "Caught unhandled HTTP exception thrown by WinterSpec provided middleware. Consider adding createWithDefaultExceptionHandling middleware to your global or route spec."
       )
     } else {
       logger.warn(

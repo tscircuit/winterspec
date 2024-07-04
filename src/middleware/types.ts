@@ -1,6 +1,6 @@
 import type { MapArray } from "../types/util.js"
 import type {
-  EdgeSpecRequest,
+  WinterSpecRequest,
   SerializableToResponse,
 } from "../types/web-handler.js"
 
@@ -9,14 +9,14 @@ export type Middleware<
   NewContext = {},
   RequestOptions = {},
 > = (
-  request: EdgeSpecRequest<
+  request: WinterSpecRequest<
     {
       routeParams: Readonly<Record<string, unknown>>
     } & RequestOptions
   >,
   ctx: RequiredContext & Partial<NewContext>,
   next: (
-    request: EdgeSpecRequest,
+    request: WinterSpecRequest,
     ctx: RequiredContext & Partial<NewContext>
   ) => Promise<Response>
 ) =>

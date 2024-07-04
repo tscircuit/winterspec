@@ -1,6 +1,6 @@
 {
-  "name": "edgespec",
-  "version": "0.0.72",
+  "name": "winterspec",
+  "version": "0.0.73",
   "description": "Write Winter-CG compatible routes with filesystem routing and tons of features",
   "type": "module",
   "files": [
@@ -45,7 +45,7 @@
       "types": "./dist/testing/ava/index.d.ts"
     }
   },
-  "repository": "git@github.com:seamapi/edgespec.git",
+  "repository": "git@github.com:tscircuit/winterspec.git",
   "scripts": {
     "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "prebuild": "del dist",
@@ -59,7 +59,7 @@
     "example:hello-world": "node --loader=tsx --no-warnings ./src/cli/cli.js serve ./examples/hello-world/routes"
   },
   "bin": {
-    "edgespec": "./dist/cli/cli.js"
+    "winterspec": "./dist/cli/cli.js"
   },
   "keywords": [
     "☃️",
@@ -71,8 +71,8 @@
     "winter",
     "cg"
   ],
-  "author": "Seam Labs Inc.",
-  "license": "ISC",
+  "author": "tscircuit Inc.",
+  "license": "MIT",
   "devDependencies": {
     "@ava/get-port": "^2.0.0",
     "@ava/typescript": "^4.1.0",

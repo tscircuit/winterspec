@@ -5,13 +5,13 @@ import path from "node:path"
 import { randomUUID } from "node:crypto"
 import { fileURLToPath } from "node:url"
 
-test("edgespec bundle doesn't throw for node:* imports when --platform node is provided", async (t) => {
+test("winterspec bundle doesn't throw for node:* imports when --platform node is provided", async (t) => {
   const cli = await getTestCLI(t)
 
   const tempPath = path.join(os.tmpdir(), `${randomUUID()}.js`)
   const appDirectoryPath = path.join(
     path.dirname(fileURLToPath(import.meta.url)),
-    "./nodejs-edgespec-project/api"
+    "./nodejs-winterspec-project/api"
   )
   const execution = cli.executeCommand([
     "bundle",

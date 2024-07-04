@@ -1,16 +1,16 @@
-import { createWithEdgeSpec } from "src/create-with-edge-spec.js"
+import { createWithWinterSpec } from "src/create-with-winter-spec.js"
 import axios from "axios"
 import type { AxiosInstance } from "axios"
 import getPort from "@ava/get-port"
 import { createNodeServerFromRouteMap } from "src/serve/create-node-server-from-route-map.js"
 import { ExecutionContext } from "ava"
 import { once } from "events"
-import { EdgeSpecOptions } from "src/types/edge-spec.js"
+import { WinterSpecOptions } from "src/types/winter-spec.js"
 import {
   GetAuthMiddlewaresFromGlobalSpec,
   GlobalSpec,
 } from "src/types/global-spec.js"
-import { EdgeSpecRouteFnFromSpecs, RouteSpec } from "src/types/route-spec.js"
+import { WinterSpecRouteFnFromSpecs, RouteSpec } from "src/types/route-spec.js"
 import { createWithLogger } from "src/middleware/with-logger.js"
 
 export const getTestRoute = async <
@@ -22,8 +22,8 @@ export const getTestRoute = async <
     globalSpec: GS
     routeSpec: RS
     routePath: string
-    routeFn: EdgeSpecRouteFnFromSpecs<GS, RS>
-    edgeSpecOptions?: Partial<EdgeSpecOptions>
+    routeFn: WinterSpecRouteFnFromSpecs<GS, RS>
+    edgeSpecOptions?: Partial<WinterSpecOptions>
   }
 ) => {
   const logs = {
@@ -33,7 +33,7 @@ export const getTestRoute = async <
     error: [] as any[][],
   }
 
-  const withRouteSpec = createWithEdgeSpec({
+  const withRouteSpec = createWithWinterSpec({
     ...opts.globalSpec,
     beforeAuthMiddleware: [
       ...(opts.globalSpec.beforeAuthMiddleware ?? []),

@@ -1,11 +1,11 @@
-# Adding EdgeSpec to an existing project
+# Adding WinterSpec to an existing project
 
-1. `npm add edgespec -D`
-2. Add `.edgespec` to your `.gitignore`.
-3. Create `edgespec.config.ts` at your project root:
+1. `npm add winterspec -D`
+2. Add `.winterspec` to your `.gitignore`.
+3. Create `winterspec.config.ts` at your project root:
 
 ```typescript
-import { defineConfig } from "edgespec"
+import { defineConfig } from "winterspec"
 
 export default defineConfig({
   // This an example, adjust as needed
@@ -13,12 +13,12 @@ export default defineConfig({
 })
 ```
 
-4. Create `with-edge-spec.ts`:
+4. Create `with-winter-spec.ts`:
 
 ```typescript
-import { createWithEdgeSpec } from "edgespec"
+import { createWithWinterSpec } from "winterspec"
 
-export const withRouteSpec = createWithEdgeSpec({
+export const withRouteSpec = createWithWinterSpec({
   apiName: "An Example API",
   productionServerUrl: "https://example.com",
   beforeAuthMiddleware: [],
@@ -26,11 +26,11 @@ export const withRouteSpec = createWithEdgeSpec({
 })
 ```
 
-5. Create a test API route in the directory you defined in `edgespec.config.ts`:
+5. Create a test API route in the directory you defined in `winterspec.config.ts`:
 
 ```typescript
 // src/api/hello-world.ts
-import { withRouteSpec } from "../with-edge-spec"
+import { withRouteSpec } from "../with-winter-spec"
 
 export default withRouteSpec({
   methods: ["GET"],
@@ -44,7 +44,7 @@ export default withRouteSpec({
 ```json
 {
   "scripts": {
-    "dev": "edgespec dev"
+    "dev": "winterspec dev"
   }
 }
 ```

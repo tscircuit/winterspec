@@ -1,13 +1,13 @@
 # Bundling and deployment
 
-Run `edgespec bundle -o dist/built.js`. Then, depending on your target:
+Run `winterspec bundle -o dist/built.js`. Then, depending on your target:
 
 ### Node.js
 
 Create an `entrypoint.mjs` file:
 
 ```js
-import { startServer } from "edgespec/adapters/node"
+import { startServer } from "winterspec/adapters/node"
 import bundle from "./dist/built"
 
 startServer(bundle, { port: 3000 })
@@ -18,7 +18,7 @@ startServer(bundle, { port: 3000 })
 Create an `entrypoint.mjs` file:
 
 ```js
-import { addFetchListener } from "edgespec/adapters/wintercg-minimal"
+import { addFetchListener } from "winterspec/adapters/wintercg-minimal"
 import bundle from "./dist/built"
 addFetchListener(edgeSpec)
 ```

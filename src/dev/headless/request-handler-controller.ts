@@ -1,7 +1,7 @@
 import fs from "node:fs/promises"
 import { EdgeRuntime } from "edge-runtime"
 import type { BirpcReturn } from "birpc"
-import { makeRequestAgainstEdgeSpec } from "src/types/edge-spec.js"
+import { makeRequestAgainstWinterSpec } from "src/types/winter-spec.js"
 import { Middleware } from "src/middleware/index.js"
 import { loadBundle } from "src/helpers.js"
 import type { BundlerRpcFunctions } from "./types.js"
@@ -11,7 +11,7 @@ const BUILD_ERROR_MESSAGE =
 
 export class RequestHandlerController {
   private cachedWinterCGRuntime?: EdgeRuntime
-  private cachedNodeHandler?: ReturnType<typeof makeRequestAgainstEdgeSpec>
+  private cachedNodeHandler?: ReturnType<typeof makeRequestAgainstWinterSpec>
   private buildLastUpdatedAt = 0
 
   constructor(
@@ -47,7 +47,7 @@ export class RequestHandlerController {
       this.cachedWinterCGRuntime = new EdgeRuntime({
         initialCode: contents,
         extend(context) {
-          context._injectedEdgeSpecMiddleware = middleware
+          context._injectedWinterSpecMiddleware = middleware
           return context
         },
       })
@@ -61,7 +61,7 @@ export class RequestHandlerController {
    * You **should not** cache the result of this function. Call it every time you want to use the handler.
    */
   async getNodeHandler(): Promise<
-    ReturnType<typeof makeRequestAgainstEdgeSpec>
+    ReturnType<typeof makeRequestAgainstWinterSpec>
   > {
     const { buildUpdatedAtMs, ...build } =
       await this.bundlerRpc.waitForAvailableBuild()

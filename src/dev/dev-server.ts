@@ -1,7 +1,7 @@
 import { MessageChannel } from "node:worker_threads"
 import { AddressInfo } from "node:net"
 import type { ChannelOptions } from "birpc"
-import type { EdgeSpecConfig } from "src/config/config.js"
+import type { WinterSpecConfig } from "src/config/config.js"
 import { loadConfig } from "src/config/utils.js"
 import {
   StartHeadlessDevServerOptions,
@@ -11,7 +11,7 @@ import { startHeadlessDevBundler } from "./headless/start-bundler.js"
 
 export type StartDevServerOptions = {
   rootDirectory?: string
-  config?: EdgeSpecConfig
+  config?: WinterSpecConfig
   port?: number
 } & Pick<
   StartHeadlessDevServerOptions,
@@ -19,7 +19,7 @@ export type StartDevServerOptions = {
 >
 
 /**
- * Start an EdgeSpec dev server. It will continuously watch your code and rebuild on changes. (This is the same function called by `edgespec dev`.)
+ * Start an WinterSpec dev server. It will continuously watch your code and rebuild on changes. (This is the same function called by `winterspec dev`.)
  *
  * This must be run within a native context (Node.js, Bun, or Deno).
  */

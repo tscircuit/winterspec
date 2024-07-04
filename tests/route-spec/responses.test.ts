@@ -1,5 +1,5 @@
 import test from "ava"
-import { EdgeSpecResponse } from "src/types/web-handler.js"
+import { WinterSpecResponse } from "src/types/web-handler.js"
 import { getTestRoute } from "../fixtures/get-test-route.js"
 import { z } from "zod"
 import { GlobalSpec } from "src/types/global-spec.js"
@@ -12,7 +12,7 @@ const defaultSpecs = {
         try {
           return await next(req, ctx)
         } catch (e: any) {
-          return EdgeSpecResponse.json(
+          return WinterSpecResponse.json(
             { error_type: e.constructor.name },
             { status: 500 }
           )
@@ -33,7 +33,7 @@ test("serializes json basic", async (t) => {
       }),
     },
     routeFn: () => {
-      return EdgeSpecResponse.json({
+      return WinterSpecResponse.json({
         hello: "world",
       })
     },
@@ -56,7 +56,7 @@ test("serializes json with status", async (t) => {
       }),
     },
     routeFn: () => {
-      return EdgeSpecResponse.json({
+      return WinterSpecResponse.json({
         hello: "world",
       }).status(201)
     },
@@ -79,7 +79,7 @@ test("validates json response", async (t) => {
       }),
     },
     routeFn: () => {
-      return EdgeSpecResponse.json({
+      return WinterSpecResponse.json({
         hello: "world",
       })
     },
@@ -105,7 +105,7 @@ test("doesnt validates json response if response validation disabled", async (t)
       }),
     },
     routeFn: () => {
-      return EdgeSpecResponse.json({
+      return WinterSpecResponse.json({
         hello: "world",
       })
     },
@@ -131,7 +131,7 @@ test("serializes form data", async (t) => {
       }),
     },
     routeFn: () => {
-      return EdgeSpecResponse.multipartFormData({
+      return WinterSpecResponse.multipartFormData({
         hello: "world",
       })
     },
@@ -162,7 +162,7 @@ test("can set headers, status", async (t) => {
       }),
     },
     routeFn: () => {
-      return EdgeSpecResponse.json({
+      return WinterSpecResponse.json({
         hello: "world",
       })
         .status(201)
@@ -237,7 +237,7 @@ test("can return custom response types", async (t) => {
       },
     },
     routeFn: () => {
-      return EdgeSpecResponse.custom("<h1>Hello, world</h1>", "text/html")
+      return WinterSpecResponse.custom("<h1>Hello, world</h1>", "text/html")
     },
     routePath: "/hello",
   })
@@ -262,7 +262,7 @@ test("can have multiple custom response types", async (t) => {
       },
     },
     routeFn: () => {
-      return EdgeSpecResponse.custom(4, "custom/response")
+      return WinterSpecResponse.custom(4, "custom/response")
     },
     routePath: "/hello",
   })

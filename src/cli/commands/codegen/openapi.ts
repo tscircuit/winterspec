@@ -11,7 +11,7 @@ import {
 } from "openapi3-ts/oas31"
 import { bundle } from "src/bundle/bundle.js"
 import { BaseCommand } from "src/cli/base-command.js"
-import { ResolvedEdgeSpecConfig } from "src/config/utils.js"
+import { ResolvedWinterSpecConfig } from "src/config/utils.js"
 import { loadBundle } from "src/helpers.js"
 import { generateSchema } from "@anatine/zod-openapi"
 import { ZodObject, ZodTypeAny } from "zod"
@@ -63,7 +63,7 @@ export class CodeGenOpenAPI extends BaseCommand {
     required: true,
   })
 
-  async run(config: ResolvedEdgeSpecConfig) {
+  async run(config: ResolvedWinterSpecConfig) {
     const tempBundlePath = path.join(os.tmpdir(), `${randomUUID()}.mjs`)
     await fs.writeFile(tempBundlePath, await bundle(config))
     const runtimeBundle = await loadBundle(tempBundlePath)
@@ -73,14 +73,14 @@ export class CodeGenOpenAPI extends BaseCommand {
     ).find((r) => Boolean(r._globalSpec))?._globalSpec
     if (!globalRouteSpec) {
       throw new Error(
-        "You must have at least one route that uses the wrapper provided by createWithEdgeSpec()."
+        "You must have at least one route that uses the wrapper provided by createWithWinterSpec()."
       )
     }
 
     const builder = new OpenApiBuilder({
       openapi: "3.0.0",
       info: {
-        title: globalRouteSpec.openapi?.apiName ?? "EdgeSpec API",
+        title: globalRouteSpec.openapi?.apiName ?? "WinterSpec API",
         version: "1.0.0", // todo
       },
       ...(globalRouteSpec.openapi?.productionServerUrl

@@ -2,6 +2,6 @@ dist
 dist-types
 node_modules
 bundled.*
-.edgespec
+.winterspec
 .vscode
 .aider*

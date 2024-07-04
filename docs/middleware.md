@@ -1,6 +1,6 @@
 # Middleware
 
-Middleware in EdgeSpec follows a similar pattern to other libraries like Express/Fastify/Koa. Middleware receives three parameters: the incoming `req` object, the `ctx` context object, and the `next` function. It is expected to always call `next`.
+Middleware in WinterSpec follows a similar pattern to other libraries like Express/Fastify/Koa. Middleware receives three parameters: the incoming `req` object, the `ctx` context object, and the `next` function. It is expected to always call `next`.
 
 Here's a few example use cases:
 
@@ -9,7 +9,7 @@ Here's a few example use cases:
 Mutate the passed `req` object. For example:
 
 ```typescript
-import type { Middleware } from "edgespec"
+import type { Middleware } from "winterspec"
 
 export const exampleMiddleware: Middleware = (req, ctx, next) => {
   req.foo = "bar"
@@ -17,7 +17,7 @@ export const exampleMiddleware: Middleware = (req, ctx, next) => {
 }
 
 // Later, in a route...
-withEdgeSpec({
+withWinterSpec({
   // ...
   middleware: [exampleMiddleware],
 })(async (req) => {
@@ -30,7 +30,7 @@ withEdgeSpec({
 Wait for a Response to be returned from the `next` callback, then modify it directly. For example:
 
 ```typescript
-import type { Middleware } from "edgespec"
+import type { Middleware } from "winterspec"
 
 export const exampleMiddleware: Middleware = (req, ctx, next) => {
   const response = await next(req, ctx)
@@ -46,7 +46,7 @@ export const exampleMiddleware: Middleware = (req, ctx, next) => {
 The `Middleware` type accepts two type parameters: the first is the additional context required on the incoming `Request` object, and the second is the output context that the middleware will return. Both are optional, but specifying the input context is very helpful when you have middlewares that depend on each other. For example:
 
 ```typescript
-import type { Middleware } from "edgespec"
+import type { Middleware } from "winterspec"
 
 export const databaseMiddleware: Middleware<
   {},
@@ -60,7 +60,7 @@ export const databaseMiddleware: Middleware<
 }
 
 export const bearerAuthMiddleware: Middleware<
-  // Required request options (Middleware "input"). Assumes that the database middleware has already been called, maybe as part of `beforeAuthMiddleware[]` in `createWithEdgeSpec`.
+  // Required request options (Middleware "input"). Assumes that the database middleware has already been called, maybe as part of `beforeAuthMiddleware[]` in `createWithWinterSpec`.
   {
     db: DatabaseClient
   },
@@ -71,7 +71,7 @@ export const bearerAuthMiddleware: Middleware<
 > = (req, ctx, next) => {
   const authToken = req.headers.get("authorization")?.split("Bearer ")?.[1]
   if (!authToken) {
-    // EdgeSpec will attach returned properties to the Request object
+    // WinterSpec will attach returned properties to the Request object
     return {
       is_authenticated: false,
     }
@@ -89,16 +89,16 @@ export const bearerAuthMiddleware: Middleware<
 
 ## Authentication Middleware
 
-Authentication middleware is just like any other middleware, except by passing it to `authMiddleware` in `createWithEdgeSpec`, you can specify it as a valid `auth` option on a route. Using the `auth` option is usually simpler and will also affect code generation.
+Authentication middleware is just like any other middleware, except by passing it to `authMiddleware` in `createWithWinterSpec`, you can specify it as a valid `auth` option on a route. Using the `auth` option is usually simpler and will also affect code generation.
 
 For example:
 
 ```ts
-// src/use-edge-spec.ts
-import { createWithEdgeSpec } from "edgespec"
+// src/use-winter-spec.ts
+import { createWithWinterSpec } from "winterspec"
 import { withApiKey, withBrowserSession } from "src/middlewares"
 
-export const withEdgeSpec = createWithEdgeSpec({
+export const withWinterSpec = createWithWinterSpec({
   apiName: "hello-world",
 
   authMiddleware: {
@@ -113,9 +113,9 @@ export const withEdgeSpec = createWithEdgeSpec({
 
 ```ts
 // routes/resource/list.ts
-import { withEdgeSpec } from "src/with-edge-spec"
+import { withWinterSpec } from "src/with-winter-spec"
 
-export default withEdgeSpec({
+export default withWinterSpec({
   auth: "apiKey",
 
   // you can also specify an array of methods, e.g. ["apiKey", "browserSession"]

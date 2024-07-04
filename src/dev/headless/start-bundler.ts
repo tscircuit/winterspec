@@ -1,7 +1,7 @@
 import path from "path"
 import { getTempPathInApp } from "src/bundle/get-temp-path-in-app.js"
 import { bundleAndWatch } from "src/bundle/watch.js"
-import { ResolvedEdgeSpecConfig } from "src/config/utils.js"
+import { ResolvedWinterSpecConfig } from "src/config/utils.js"
 import { ChannelOptions, createBirpcGroup } from "birpc"
 import {
   HttpServerRpcFunctions,
@@ -12,12 +12,12 @@ import { formatMessages } from "esbuild"
 import { AsyncWorkTracker } from "src/lib/async-work-tracker.js"
 
 export interface StartHeadlessDevBundlerOptions {
-  config: ResolvedEdgeSpecConfig
+  config: ResolvedWinterSpecConfig
   initialRpcChannels?: ChannelOptions[]
 }
 
 /**
- * Start a headless EdgeSpec dev bundler. It will continuously watch your code and rebuild on changes.
+ * Start a headless WinterSpec dev bundler. It will continuously watch your code and rebuild on changes.
  * For this to be useful, you'll probably want to also start a headless dev server.
  * This must be run within a native context (Node.js, Bun, or Deno).
  */

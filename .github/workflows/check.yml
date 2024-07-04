@@ -97,7 +97,7 @@ jobs:
           write-mode: overwrite
           path: index.js
           contents: |
-            import 'edgespec'
+            import 'winterspec'
       - name: Install
         run: npm install --ignore-scripts --save ${{ steps.packages.outputs.paths }}
       - name: Rebuild Node.js modules

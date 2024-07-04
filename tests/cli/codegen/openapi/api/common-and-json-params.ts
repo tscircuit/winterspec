@@ -1,7 +1,7 @@
 import { z } from "zod"
-import { withEdgeSpec } from "../with-edge-spec.js"
+import { withWinterSpec } from "../with-winter-spec.js"
 
-export default withEdgeSpec({
+export default withWinterSpec({
   methods: ["GET", "POST"],
   commonParams: z.object({
     user_id: z.string(),

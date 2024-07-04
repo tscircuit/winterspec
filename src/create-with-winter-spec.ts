@@ -5,12 +5,12 @@ import type { CreateWithRouteSpecFn, RouteSpec } from "./types/route-spec.js"
 import type { ResponseTypeToContext } from "./types/context.js"
 import type { InferRecordKey } from "./types/util.js"
 import {
-  EdgeSpecMultiPartFormDataResponse,
-  EdgeSpecJsonResponse,
-  EdgeSpecRequest,
-  EdgeSpecResponse,
-  EdgeSpecRouteFn,
-  EdgeSpecCustomResponse,
+  WinterSpecMultiPartFormDataResponse,
+  WinterSpecJsonResponse,
+  WinterSpecRequest,
+  WinterSpecResponse,
+  WinterSpecRouteFn,
+  WinterSpecCustomResponse,
   SerializableToResponse,
 } from "./types/web-handler.js"
 import { withMethods } from "./middleware/with-methods.js"
@@ -23,14 +23,14 @@ const attachMetadataToRouteFn = <
   const RS extends RouteSpec<InferRecordKey<GS["authMiddleware"]>>,
 >(
   { globalSpec, routeSpec }: { globalSpec: GS; routeSpec: RS },
-  routeFn: EdgeSpecRouteFn
+  routeFn: WinterSpecRouteFn
 ) => {
   routeFn._globalSpec = globalSpec
   routeFn._routeSpec = routeSpec
   return routeFn
 }
 
-export const createWithEdgeSpec = <const GS extends GlobalSpec>(
+export const createWithWinterSpec = <const GS extends GlobalSpec>(
   globalSpec: GS
 ): CreateWithRouteSpecFn<GS> => {
   return (routeSpec) => (routeFn) =>
@@ -60,15 +60,15 @@ export const createWithEdgeSpec = <const GS extends GlobalSpec>(
           [
             // Injected into the VM when running in WinterCG emulation mode
             // @ts-expect-error
-            ...(typeof _injectedEdgeSpecMiddleware !== "undefined"
+            ...(typeof _injectedWinterSpecMiddleware !== "undefined"
               ? // @ts-expect-error
-                _injectedEdgeSpecMiddleware
+                _injectedWinterSpecMiddleware
               : []),
             withUnhandledExceptionHandling,
             // this serializes responses that are returned by middleware WITHOUT
             // validating them against the routeSpec
             //
-            // this allows returning EdgeSpecResponse.json or ctx.json in a
+            // this allows returning WinterSpecResponse.json or ctx.json in a
             // middleware, instead of having to return a raw Response
             //
             // this is needed, for instance, when an error middleware returns an
@@ -115,7 +115,7 @@ export const createWithEdgeSpec = <const GS extends GlobalSpec>(
  * way to the final response
  *
  * This also handles validation of the response and serializing it from an
- * EdgeSpecResponse to a wintercg-compatible Response
+ * WinterSpecResponse to a wintercg-compatible Response
  */
 function serializeResponse(
   globalSpec: GlobalSpec,
@@ -126,7 +126,7 @@ function serializeResponse(
     const rawResponse = await next(req, ctx)
 
     const statusCode =
-      rawResponse instanceof EdgeSpecResponse
+      rawResponse instanceof WinterSpecResponse
         ? rawResponse.statusCode()
         : rawResponse.status
 
@@ -150,8 +150,8 @@ function serializeResponse(
 
 export async function wrapMiddlewares(
   middlewares: MiddlewareChain,
-  routeFn: EdgeSpecRouteFn<any, any, any>,
-  request: EdgeSpecRequest,
+  routeFn: WinterSpecRouteFn<any, any, any>,
+  request: WinterSpecRequest,
   ctx: ResponseTypeToContext<Response>
 ) {
   return await middlewares.reduceRight(
@@ -160,7 +160,7 @@ export async function wrapMiddlewares(
         return middleware(req, ctx, next as any)
       }
     },
-    async (request: EdgeSpecRequest, ctx: ResponseTypeToContext<Response>) =>
+    async (request: WinterSpecRequest, ctx: ResponseTypeToContext<Response>) =>
       routeFn(request, ctx)
   )(request, ctx)
 }
@@ -176,18 +176,18 @@ function serializeToResponse(
       : response
   }
 
-  if (response instanceof EdgeSpecResponse) {
-    if (response instanceof EdgeSpecJsonResponse) {
+  if (response instanceof WinterSpecResponse) {
+    if (response instanceof WinterSpecJsonResponse) {
       return response.serializeToResponse(routeSpec.jsonResponse ?? z.any())
     }
 
-    if (response instanceof EdgeSpecMultiPartFormDataResponse) {
+    if (response instanceof WinterSpecMultiPartFormDataResponse) {
       return response.serializeToResponse(
         routeSpec.multipartFormDataResponse ?? z.any()
       )
     }
 
-    if (response instanceof EdgeSpecCustomResponse) {
+    if (response instanceof WinterSpecCustomResponse) {
       return response.serializeToResponse(z.any())
     }
   }

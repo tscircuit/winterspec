@@ -1,8 +1,8 @@
 # Testing
 
-EdgeSpec aims to support all common test runners. If you don't see your test runner here, please open an issue.
+WinterSpec aims to support all common test runners. If you don't see your test runner here, please open an issue.
 
-EdgeSpec test fixtures run a local dev server, so it supports your test runner's watch mode out of the box.
+WinterSpec test fixtures run a local dev server, so it supports your test runner's watch mode out of the box.
 
 For the examples below, assume that there is a single `/health` endpoint that returns `OK`.
 
@@ -14,7 +14,7 @@ Add this to your AVA config (in `package.json`, `ava.config.js`, or `ava.config.
 {
   // your AVA config...
   watchMode: {
-		ignoreChanges: [".edgespec"],
+		ignoreChanges: [".winterspec"],
 	}
 }
 ```
@@ -26,7 +26,7 @@ Then, you can import a helper to start a dev server:
 ```typescript
 import test from "ava"
 import axios from "axios"
-import { getTestServer } from "edgespec/testing/ava"
+import { getTestServer } from "winterspec/testing/ava"
 
 test("GET /health", async (t) => {
   const { port } = getTestServer(t)

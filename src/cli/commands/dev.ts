@@ -3,7 +3,7 @@ import { durationFormatter } from "human-readable"
 import ora from "ora"
 import { startDevServer } from "src/dev/dev-server.js"
 import { BaseCommand } from "../base-command.js"
-import { ResolvedEdgeSpecConfig } from "src/config/utils.js"
+import { ResolvedWinterSpecConfig } from "src/config/utils.js"
 
 export class DevCommand extends BaseCommand {
   static paths = [[`dev`]]
@@ -22,7 +22,7 @@ export class DevCommand extends BaseCommand {
       "Emulate the WinterCG runtime. When true, native APIs are unavailable.",
   })
 
-  async run(config: ResolvedEdgeSpecConfig) {
+  async run(config: ResolvedWinterSpecConfig) {
     const configWithOverrides = {
       emulateWinterCG: this.emulateWinterCG,
       ...config,

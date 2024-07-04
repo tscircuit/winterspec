@@ -1,7 +1,7 @@
-import { withEdgeSpec } from "../with-edge-spec.js"
+import { withWinterSpec } from "../with-winter-spec.js"
 import { jsonResponse } from "./foo.js"
 
-export default withEdgeSpec({
+export default withWinterSpec({
   auth: "none",
   methods: ["PUT"],
   jsonResponse,

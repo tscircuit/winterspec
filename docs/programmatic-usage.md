@@ -5,11 +5,11 @@ Everything you can do through the CLI, you can do programmatically (and more!).
 ## Starting a dev server
 
 ```typescript
-import { devServer } from "edgespec/dev"
+import { devServer } from "winterspec/dev"
 
 // All properties are optional
 devServer.startDevServer({
-  configPath: "./edgespec.config.ts",
+  configPath: "./winterspec.config.ts",
   config: {
     // Override something from your config file
   },
@@ -41,15 +41,15 @@ It's unlikely you'll need to use this API directly—check out the built-in fixt
 ```typescript
 import { EventEmitter } from "node:events"
 import { MessageChannel } from "node:worker_threads"
-import { loadConfig } from "edgespec/config"
-import { devServer, HeadlessBuildEvents } from "edgespec/dev"
+import { loadConfig } from "winterspec/config"
+import { devServer, HeadlessBuildEvents } from "winterspec/dev"
 import type { ChannelOptions } from "birpc"
 
-const config = await loadConfig({ configPath: "./edgespec.config.ts" })
+const config = await loadConfig({ configPath: "./winterspec.config.ts" })
 
 const messageChannel = new MessageChannel()
 
-// Under the hood, EdgeSpec uses https://www.npmjs.com/package/birpc.
+// Under the hood, WinterSpec uses https://www.npmjs.com/package/birpc.
 // A MessageChannel is one of the simplest possible transports, but you can use any transport you want.
 const bundlerRpcChannel: ChannelOptions = {
   post: (data) => messageChannel.port1.postMessage(data),

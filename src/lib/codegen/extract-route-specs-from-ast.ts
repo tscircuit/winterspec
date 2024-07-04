@@ -144,18 +144,19 @@ export const extractRouteSpecsFromAST = async ({
     .getChildrenOfKind(ts.SyntaxKind.CallExpression)[0]
     .getChildrenOfKind(ts.SyntaxKind.Identifier)[0]
 
-  const createWithEdgeSpecCall = withRouteSpecIdentifier
+  const createWithWinterSpecCall = withRouteSpecIdentifier
     .getDefinitionNodes()[0]
     .getChildrenOfKind(ts.SyntaxKind.CallExpression)[0]
 
-  const createWithEdgeSpecCallSignature = project
+  const createWithWinterSpecCallSignature = project
     .getTypeChecker()
-    .getResolvedSignature(createWithEdgeSpecCall)
-  if (!createWithEdgeSpecCallSignature) {
+    .getResolvedSignature(createWithWinterSpecCall)
+  if (!createWithWinterSpecCallSignature) {
     throw new Error("foo")
   }
 
-  const globalRouteSpec = createWithEdgeSpecCallSignature?.getParameters()?.[0]
+  const globalRouteSpec =
+    createWithWinterSpecCallSignature?.getParameters()?.[0]
   if (!globalRouteSpec) {
     throw new Error("foo")
   }

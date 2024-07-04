@@ -7,8 +7,8 @@ import { CodeGenOpenAPI } from "./commands/codegen/openapi.js"
 
 runExit(
   {
-    binaryLabel: "EdgeSpec",
-    binaryName: "edgespec",
+    binaryLabel: "WinterSpec",
+    binaryName: "winterspec",
   },
   [BundleCommand, DevCommand, CodeGenRouteTypes, CodeGenOpenAPI]
 )

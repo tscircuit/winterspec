@@ -8,7 +8,7 @@ export interface HttpException {
   _isHttpException: true
 }
 
-export abstract class EdgeSpecMiddlewareError
+export abstract class WinterSpecMiddlewareError
   extends Error
   implements HttpException
 {
@@ -23,19 +23,19 @@ export abstract class EdgeSpecMiddlewareError
   }
 }
 
-export class MethodNotAllowedError extends EdgeSpecMiddlewareError {
+export class MethodNotAllowedError extends WinterSpecMiddlewareError {
   constructor(allowedMethods: readonly string[]) {
     super(`only ${allowedMethods.join(",")} accepted`, 405)
   }
 }
 
-export class NotFoundError extends EdgeSpecMiddlewareError {
+export class NotFoundError extends WinterSpecMiddlewareError {
   constructor(message: string) {
     super(message, 404)
   }
 }
 
-export abstract class BadRequestError extends EdgeSpecMiddlewareError {
+export abstract class BadRequestError extends WinterSpecMiddlewareError {
   constructor(message: string) {
     super(message, 400)
   }
@@ -65,7 +65,7 @@ export class InputValidationError extends BadRequestError {
   }
 }
 
-export class ResponseValidationError extends EdgeSpecMiddlewareError {
+export class ResponseValidationError extends WinterSpecMiddlewareError {
   constructor(error: z.ZodError<any>) {
     super(formatZodError(error), 500)
   }

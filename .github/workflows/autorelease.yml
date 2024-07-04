@@ -17,7 +17,5 @@ jobs:
       - run: npm run build
       - run: pver release
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.SEAMAPI_NPM_TOKEN }}
-          # Make sure seambot is configured to bypass branch protection and
-          # dismiss PR reviews
-          GITHUB_TOKEN: ${{ secrets.BOT_GH_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TSCIRCUIT_BOT_GITHUB_TOKEN }}

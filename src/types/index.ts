@@ -1,22 +1,22 @@
 export type {
-  EdgeSpecRequest,
-  EdgeSpecRequestOptions,
+  WinterSpecRequest,
+  WinterSpecRequestOptions,
   HTTPMethods,
-  EdgeSpecResponse,
-  EdgeSpecJsonResponse,
-  EdgeSpecMultiPartFormDataResponse,
-  EdgeSpecCustomResponse,
+  WinterSpecResponse,
+  WinterSpecJsonResponse,
+  WinterSpecMultiPartFormDataResponse,
+  WinterSpecCustomResponse,
   MiddlewareResponseData,
   SerializableToResponse,
-  EdgeSpecRouteFn,
-  EdgeSpecRouteParams,
+  WinterSpecRouteFn,
+  WinterSpecRouteParams,
 } from "./web-handler.js"
 
 export type {
-  EdgeSpecAdapter,
-  EdgeSpecOptions,
-  EdgeSpecRouteBundle,
-} from "./edge-spec.js"
+  WinterSpecAdapter,
+  WinterSpecOptions,
+  WinterSpecRouteBundle,
+} from "./winter-spec.js"
 
 export type {
   GetAuthMiddlewaresFromGlobalSpec,
@@ -28,7 +28,7 @@ export type {
 export type {
   RouteSpec,
   CreateWithRouteSpecFn,
-  EdgeSpecRouteFnFromSpecs,
+  WinterSpecRouteFnFromSpecs,
 } from "./route-spec.js"
 
 export type { Middleware } from "../middleware/types.js"

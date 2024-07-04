@@ -1,5 +1,5 @@
 import type { FetchEvent } from "@edge-runtime/primitives"
-import { EdgeSpecRouteBundle } from "./edge-spec.js"
+import { WinterSpecRouteBundle } from "./winter-spec.js"
 import { Primitive } from "type-fest"
 import { z } from "zod"
 import { ResponseTypeToContext } from "./context.js"
@@ -15,18 +15,18 @@ export type HTTPMethods =
   | "HEAD"
   | "OPTIONS"
 
-export type EdgeSpecRouteParams = {
+export type WinterSpecRouteParams = {
   [routeParam: string]: string | string[]
 }
 
 export type HeadersDescriptor = Headers | HeadersInit
 
-export interface EdgeSpecRequestOptions {
-  routeParams: EdgeSpecRouteParams
-  edgeSpec: EdgeSpecRouteBundle
+export interface WinterSpecRequestOptions {
+  routeParams: WinterSpecRouteParams
+  edgeSpec: WinterSpecRouteBundle
 }
 
-export type EdgeSpecRequest<T = {}> = EdgeSpecRequestOptions & Request & T
+export type WinterSpecRequest<T = {}> = WinterSpecRequestOptions & Request & T
 
 export interface SerializableToResponse {
   /**
@@ -42,7 +42,7 @@ export interface SerializableToResponse {
 
 export type ValidFormDataValue = Primitive | Blob
 
-export abstract class EdgeSpecResponse implements SerializableToResponse {
+export abstract class WinterSpecResponse implements SerializableToResponse {
   abstract serializeToResponse(schema: z.ZodTypeAny): Response
 
   statusCode(): number {
@@ -75,25 +75,27 @@ export abstract class EdgeSpecResponse implements SerializableToResponse {
   constructor(protected options: ResponseInit = {}) {}
 
   static json<T>(
-    ...args: ConstructorParameters<typeof EdgeSpecJsonResponse<T>>
+    ...args: ConstructorParameters<typeof WinterSpecJsonResponse<T>>
   ) {
-    return new EdgeSpecJsonResponse<T>(...args)
+    return new WinterSpecJsonResponse<T>(...args)
   }
 
   static multipartFormData<T extends Record<string, ValidFormDataValue>>(
-    ...args: ConstructorParameters<typeof EdgeSpecMultiPartFormDataResponse<T>>
+    ...args: ConstructorParameters<
+      typeof WinterSpecMultiPartFormDataResponse<T>
+    >
   ) {
-    return new EdgeSpecMultiPartFormDataResponse<T>(...args)
+    return new WinterSpecMultiPartFormDataResponse<T>(...args)
   }
 
   static custom<T, const C extends string>(
-    ...args: ConstructorParameters<typeof EdgeSpecCustomResponse<T, C>>
+    ...args: ConstructorParameters<typeof WinterSpecCustomResponse<T, C>>
   ) {
-    return new EdgeSpecCustomResponse<T, C>(...args)
+    return new WinterSpecCustomResponse<T, C>(...args)
   }
 }
 
-export class EdgeSpecJsonResponse<T> extends EdgeSpecResponse {
+export class WinterSpecJsonResponse<T> extends WinterSpecResponse {
   constructor(
     public data: T,
     options: ResponseInit = {}
@@ -109,10 +111,10 @@ export class EdgeSpecJsonResponse<T> extends EdgeSpecResponse {
   }
 }
 
-export class EdgeSpecCustomResponse<
+export class WinterSpecCustomResponse<
   T,
   const C extends string,
-> extends EdgeSpecResponse {
+> extends WinterSpecResponse {
   constructor(
     public data: T,
     public contentType: C,
@@ -129,7 +131,7 @@ export class EdgeSpecCustomResponse<
   }
 }
 
-export class MiddlewareResponseData extends EdgeSpecResponse {
+export class MiddlewareResponseData extends WinterSpecResponse {
   constructor(options: ResponseInit = {}) {
     super(options)
   }
@@ -139,9 +141,9 @@ export class MiddlewareResponseData extends EdgeSpecResponse {
   }
 }
 
-export class EdgeSpecMultiPartFormDataResponse<
+export class WinterSpecMultiPartFormDataResponse<
   T extends Record<string, ValidFormDataValue>,
-> extends EdgeSpecResponse {
+> extends WinterSpecResponse {
   constructor(
     public data: T,
     options: ResponseInit = {}
@@ -164,26 +166,26 @@ export class EdgeSpecMultiPartFormDataResponse<
   }
 }
 
-export type EdgeSpecRouteFn<
-  RequestOptions = EdgeSpecRequestOptions,
+export type WinterSpecRouteFn<
+  RequestOptions = WinterSpecRequestOptions,
   ResponseType extends SerializableToResponse | Response = Response,
   Context = ResponseTypeToContext<ResponseType>,
 > = ((
-  req: EdgeSpecRequest<RequestOptions>,
+  req: WinterSpecRequest<RequestOptions>,
   ctx: Context
 ) => ResponseType | Promise<ResponseType>) & {
   _globalSpec?: GlobalSpec
   _routeSpec?: RouteSpec<any>
 }
 
-export type EdgeSpecFetchEvent = FetchEvent & {
-  request: EdgeSpecRequest
+export type WinterSpecFetchEvent = FetchEvent & {
+  request: WinterSpecRequest
 }
 
-export function createEdgeSpecRequest(
+export function createWinterSpecRequest(
   request: Request,
-  options: EdgeSpecRequestOptions
-): EdgeSpecRequest {
+  options: WinterSpecRequestOptions
+): WinterSpecRequest {
   return Object.assign(request, options)
 }
 

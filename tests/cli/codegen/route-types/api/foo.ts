@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { withEdgeSpec } from "../with-edge-spec.js"
+import { withWinterSpec } from "../with-winter-spec.js"
 
 export const jsonResponse = z.object({
   foo: z.object({
@@ -8,7 +8,7 @@ export const jsonResponse = z.object({
   }),
 })
 
-export default withEdgeSpec({
+export default withWinterSpec({
   auth: "none",
   methods: ["GET", "POST"],
   jsonBody: z.object({

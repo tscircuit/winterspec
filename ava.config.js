@@ -7,9 +7,9 @@ export default () => {
         ".nsm",
         "**/bundled*.*s",
         "**/api/**",
-        "**/.edgespec/**",
+        "**/.winterspec/**",
         // Temporary file created by bundle-require
-        "**/edgespec.config.bundled*",
+        "**/winterspec.config.bundled*",
       ],
     },
     nodeArguments: ["--import=tsx"],

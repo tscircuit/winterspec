@@ -4,10 +4,10 @@ Each API route is defined in a separate file within a specific directory (by def
 
 ```ts
 // api/index.ts
-import { withEdgeSpec } from "../with-edge-spec"
+import { withWinterSpec } from "../with-winter-spec"
 import { z } from "zod"
 
-export default withEdgeSpec({
+export default withWinterSpec({
   auth: "none",
   methods: ["POST"],
   jsonBody: z.object({
@@ -26,11 +26,11 @@ export default withEdgeSpec({
 })
 ```
 
-[Zod](https://github.com/colinhacks/zod) is used for validation. By default, **both** input and output (`Response.json()`) are validated against the provided schemas. See the docs on [`createWithEdgeSpec()`](./global-route-config.md) if you want to disable this.
+[Zod](https://github.com/colinhacks/zod) is used for validation. By default, **both** input and output (`Response.json()`) are validated against the provided schemas. See the docs on [`createWithWinterSpec()`](./global-route-config.md) if you want to disable this.
 
 ## File routing
 
-EdgeSpec loosely follows Next.js's route convention. For example:
+WinterSpec loosely follows Next.js's route convention. For example:
 
 - `/api/health.ts` -> `GET /health`
 - `/api/resource/[id].ts` -> `GET /resource/:id`

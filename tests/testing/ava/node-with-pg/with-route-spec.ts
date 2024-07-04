@@ -1,5 +1,5 @@
-import { createWithEdgeSpec } from "../../../../src/create-with-edge-spec.js"
+import { createWithWinterSpec } from "../../../../src/create-with-winter-spec.js"
 
-export const withRouteSpec = createWithEdgeSpec({
+export const withRouteSpec = createWithWinterSpec({
   authMiddleware: {},
 })

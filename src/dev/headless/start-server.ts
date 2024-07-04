@@ -2,7 +2,7 @@ import { once } from "node:events"
 import { createServer } from "node:http"
 import kleur from "kleur"
 import { transformToNodeBuilder } from "src/edge/transform-to-node.js"
-import { ResolvedEdgeSpecConfig } from "src/config/utils.js"
+import { ResolvedWinterSpecConfig } from "src/config/utils.js"
 import { RequestHandlerController } from "./request-handler-controller.js"
 import { Middleware } from "src/middleware/index.js"
 import { createBirpc, type ChannelOptions } from "birpc"
@@ -10,7 +10,7 @@ import { BundlerRpcFunctions, HttpServerRpcFunctions } from "./types.js"
 
 export interface StartHeadlessDevServerOptions {
   port: number
-  config: ResolvedEdgeSpecConfig
+  config: ResolvedWinterSpecConfig
   rpcChannel: ChannelOptions
   middleware?: Middleware[]
   onListening?: (port: number) => void
@@ -19,7 +19,7 @@ export interface StartHeadlessDevServerOptions {
 }
 
 /**
- * Start a headless EdgeSpec dev server. It receives a bundle from the headless dev bundler and serves it.
+ * Start a headless WinterSpec dev server. It receives a bundle from the headless dev bundler and serves it.
  *
  * This must be run within a native context (Node.js, Bun, or Deno).
  */

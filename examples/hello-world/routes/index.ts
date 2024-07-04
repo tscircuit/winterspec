@@ -1,6 +1,6 @@
-import { withEdgeSpec } from "../src/with-edge-spec"
+import { withWinterSpec } from "../src/with-winter-spec"
 
-export default withEdgeSpec({
+export default withWinterSpec({
   auth: "none",
   methods: ["GET"],
 })((req) => {

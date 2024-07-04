@@ -1,7 +1,7 @@
 import path from "node:path"
 import fs from "node:fs/promises"
 import { bundleRequire } from "bundle-require"
-import { EdgeSpecConfig } from "src/config/config.js"
+import { WinterSpecConfig } from "src/config/config.js"
 import { SetRequired } from "type-fest"
 
 const cloneObjectAndDeleteUndefinedKeys = <T extends Record<string, any>>(
@@ -27,7 +27,7 @@ const resolvePossibleRelativePath = (
   return path.resolve(configDirectory, possibleRelativePath)
 }
 
-export interface ResolvedEdgeSpecConfig extends EdgeSpecConfig {
+export interface ResolvedWinterSpecConfig extends WinterSpecConfig {
   rootDirectory: string
   tsconfigPath: string
   routesDirectory: string
@@ -37,8 +37,8 @@ export interface ResolvedEdgeSpecConfig extends EdgeSpecConfig {
  * Resolves relative paths and sets defaults for any missing values.
  */
 export const resolveConfig = (
-  config: SetRequired<EdgeSpecConfig, "rootDirectory">
-): ResolvedEdgeSpecConfig => {
+  config: SetRequired<WinterSpecConfig, "rootDirectory">
+): ResolvedWinterSpecConfig => {
   const { rootDirectory, tsconfigPath, routesDirectory, ...rest } =
     cloneObjectAndDeleteUndefinedKeys(config)
 
@@ -59,7 +59,7 @@ export const resolveConfig = (
   }
 }
 
-const validateConfig = async (config: ResolvedEdgeSpecConfig) => {
+const validateConfig = async (config: ResolvedWinterSpecConfig) => {
   try {
     await fs.stat(config.routesDirectory)
   } catch (error) {
@@ -77,12 +77,12 @@ const validateConfig = async (config: ResolvedEdgeSpecConfig) => {
 
 export const loadConfig = async (
   rootDirectory: string,
-  overrides?: Partial<EdgeSpecConfig>
+  overrides?: Partial<WinterSpecConfig>
 ) => {
-  let loadedConfig: EdgeSpecConfig = {}
+  let loadedConfig: WinterSpecConfig = {}
 
   let configInRootExists = false
-  const potentialConfigPath = path.join(rootDirectory, "edgespec.config.ts")
+  const potentialConfigPath = path.join(rootDirectory, "winterspec.config.ts")
   try {
     await fs.stat(potentialConfigPath)
     configInRootExists = true

@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { withEdgeSpec } from "../with-edge-spec.js"
+import { withWinterSpec } from "../with-winter-spec.js"
 
 const manyParams = z.object({
   this_has: z.string(),
@@ -13,7 +13,7 @@ const manyParams = z.object({
   expanded: z.string(),
 })
 
-export default withEdgeSpec({
+export default withWinterSpec({
   auth: "none",
   methods: ["GET", "POST"],
   jsonBody: manyParams.extend({

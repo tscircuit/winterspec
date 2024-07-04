@@ -9,7 +9,7 @@ export type Logger = {
 
 /**
  * Attaches a provided logger to ctx.logger.
- * `ctx.logger` is used by internal EdgeSpec middleware when provided (instead of `console`).
+ * `ctx.logger` is used by internal WinterSpec middleware when provided (instead of `console`).
  */
 export const createWithLogger =
   <L extends Logger>(

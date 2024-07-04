@@ -1,4 +1,4 @@
-import { createWithEdgeSpec } from "../../../src/index.js"
+import { createWithWinterSpec } from "../../../src/index.js"
 import type { Middleware } from "../../../src/middleware/index.js"
 
 const sampleMiddleware: Middleware<{}, { middlewareType: string }> = (
@@ -13,7 +13,7 @@ const sampleMiddleware: Middleware<{}, { middlewareType: string }> = (
   return next(req, ctx)
 }
 
-export const withRouteSpec = createWithEdgeSpec({
+export const withRouteSpec = createWithWinterSpec({
   beforeAuthMiddleware: [sampleMiddleware],
   authMiddleware: {},
   apiName: "Example",

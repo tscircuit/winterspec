@@ -5,17 +5,17 @@ import {
   type TransformToNodeOptions,
   transformToNodeBuilder,
 } from "src/edge/transform-to-node.js"
-import { EdgeSpecRouteFn } from "src/types/web-handler.js"
+import { WinterSpecRouteFn } from "src/types/web-handler.js"
 import {
-  EdgeSpecRouteBundle,
-  EdgeSpecOptions,
-  makeRequestAgainstEdgeSpec,
-} from "src/types/edge-spec.js"
+  WinterSpecRouteBundle,
+  WinterSpecOptions,
+  makeRequestAgainstWinterSpec,
+} from "src/types/winter-spec.js"
 
-const createEdgeSpecFromRouteMap = (
-  routeMap: Record<string, EdgeSpecRouteFn>,
-  edgeSpecOptions?: Partial<EdgeSpecOptions>
-): EdgeSpecRouteBundle => {
+const createWinterSpecFromRouteMap = (
+  routeMap: Record<string, WinterSpecRouteFn>,
+  edgeSpecOptions?: Partial<WinterSpecOptions>
+): WinterSpecRouteBundle => {
   const formattedRoutes = normalizeRouteMap(routeMap)
   const routeMatcher = getRouteMatcher(Object.keys(formattedRoutes))
 
@@ -30,7 +30,7 @@ const createEdgeSpecFromRouteMap = (
     routeMatcher,
     routeMapWithHandlers,
     makeRequest: async (req: Request) =>
-      makeRequestAgainstEdgeSpec(edgeSpec)(req),
+      makeRequestAgainstWinterSpec(edgeSpec)(req),
     ...edgeSpecOptions,
   }
 
@@ -38,16 +38,16 @@ const createEdgeSpecFromRouteMap = (
 }
 
 export const createNodeServerFromRouteMap = async (
-  routeMap: Record<string, EdgeSpecRouteFn>,
+  routeMap: Record<string, WinterSpecRouteFn>,
   transformToNodeOptions: TransformToNodeOptions,
-  edgeSpecOptions?: Partial<EdgeSpecOptions>
+  edgeSpecOptions?: Partial<WinterSpecOptions>
 ) => {
-  const edgeSpec = createEdgeSpecFromRouteMap(routeMap, edgeSpecOptions)
+  const edgeSpec = createWinterSpecFromRouteMap(routeMap, edgeSpecOptions)
 
   const transformToNode = transformToNodeBuilder(transformToNodeOptions)
 
   const server = createServer(
-    transformToNode(makeRequestAgainstEdgeSpec(edgeSpec))
+    transformToNode(makeRequestAgainstWinterSpec(edgeSpec))
   )
 
   return server

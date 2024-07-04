@@ -1,41 +1,41 @@
 import {
-  EdgeSpecCustomResponse,
-  EdgeSpecJsonResponse,
-  EdgeSpecMultiPartFormDataResponse,
-  EdgeSpecResponse,
+  WinterSpecCustomResponse,
+  WinterSpecJsonResponse,
+  WinterSpecMultiPartFormDataResponse,
+  WinterSpecResponse,
   SerializableToResponse,
 } from "./web-handler.js"
 
 export type ResponseTypeToContext<
   ResponseType extends SerializableToResponse | Response,
-> = Exclude<ResponseType, Response> extends EdgeSpecJsonResponse<infer T>
+> = Exclude<ResponseType, Response> extends WinterSpecJsonResponse<infer T>
   ? {
-      json: typeof EdgeSpecResponse.json<T>
+      json: typeof WinterSpecResponse.json<T>
     }
-  : Exclude<ResponseType, Response> extends EdgeSpecMultiPartFormDataResponse<
+  : Exclude<ResponseType, Response> extends WinterSpecMultiPartFormDataResponse<
         infer T
       >
     ? {
-        multipartFormData: typeof EdgeSpecResponse.multipartFormData<T>
+        multipartFormData: typeof WinterSpecResponse.multipartFormData<T>
       }
-    : Exclude<ResponseType, Response> extends EdgeSpecCustomResponse<
+    : Exclude<ResponseType, Response> extends WinterSpecCustomResponse<
           infer T,
           infer C
         >
       ? {
-          custom: typeof EdgeSpecResponse.custom<T, C>
+          custom: typeof WinterSpecResponse.custom<T, C>
         }
       : {
-          json: typeof EdgeSpecResponse.json<unknown>
-          multipartFormData: typeof EdgeSpecResponse.multipartFormData<
+          json: typeof WinterSpecResponse.json<unknown>
+          multipartFormData: typeof WinterSpecResponse.multipartFormData<
             Record<string, string>
           >
         }
 
 const DEFAULT_CONTEXT = {
-  json: EdgeSpecResponse.json,
-  multipartFormData: EdgeSpecResponse.multipartFormData,
-  custom: EdgeSpecResponse.custom,
+  json: WinterSpecResponse.json,
+  multipartFormData: WinterSpecResponse.multipartFormData,
+  custom: WinterSpecResponse.custom,
 } as const
 
 export const getDefaultContext = () => ({ ...DEFAULT_CONTEXT })

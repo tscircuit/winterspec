@@ -28,7 +28,7 @@ export const constructManifest = async (options: ConstructManifestOptions) => {
 
   return `
 import {getRouteMatcher} from "next-route-matcher"
-import { makeRequestAgainstEdgeSpec } from "edgespec"
+import { makeRequestAgainstWinterSpec } from "winterspec"
 
 ${routes
   .map(
@@ -46,13 +46,13 @@ const routeMapWithHandlers = {
 const edgeSpec = {
   routeMatcher: getRouteMatcher(Object.keys(routeMapWithHandlers)),
   routeMapWithHandlers,
-  makeRequest: async (req, options) => makeRequestAgainstEdgeSpec(edgeSpec, options)(req)
+  makeRequest: async (req, options) => makeRequestAgainstWinterSpec(edgeSpec, options)(req)
 }
 
 ${
   options.bundledAdapter === "wintercg-minimal"
     ? `
-import {addFetchListener} from "edgespec/adapters/wintercg-minimal"
+import {addFetchListener} from "winterspec/adapters/wintercg-minimal"
 addFetchListener(edgeSpec)
 `
     : "export default edgeSpec"

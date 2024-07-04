@@ -1,7 +1,7 @@
 import test from "ava"
-import { createWithEdgeSpec } from "src/create-with-edge-spec.js"
+import { createWithWinterSpec } from "src/create-with-winter-spec.js"
 import { expectTypeOf } from "expect-type"
-import { EdgeSpecResponse } from "src/types/web-handler.js"
+import { WinterSpecResponse } from "src/types/web-handler.js"
 import { z } from "zod"
 import { Middleware } from "src/middleware/index.js"
 import { getDefaultContext } from "src/types/context.js"
@@ -38,7 +38,7 @@ const withName: Middleware<{}, { name: string }> = (req, ctx, next) => {
 }
 
 test.skip("auth none is always supported", () => {
-  createWithEdgeSpec({
+  createWithWinterSpec({
     authMiddleware: {},
   })({
     auth: "none",
@@ -47,7 +47,7 @@ test.skip("auth none is always supported", () => {
 })
 
 test.skip("auth none is optional", () => {
-  createWithEdgeSpec({
+  createWithWinterSpec({
     authMiddleware: {},
   })({
     methods: ["GET"],
@@ -58,7 +58,7 @@ test.skip("auth none is optional", () => {
 })
 
 test.skip("auth none cannot be provided in an array", () => {
-  createWithEdgeSpec({
+  createWithWinterSpec({
     authMiddleware: {},
   })({
     // @ts-expect-error
@@ -68,17 +68,17 @@ test.skip("auth none cannot be provided in an array", () => {
 })
 
 test.skip("cannot select non-existent auth methods", () => {
-  const withEdgeSpec = createWithEdgeSpec({
+  const withWinterSpec = createWithWinterSpec({
     authMiddleware: {},
   })
 
-  withEdgeSpec({
+  withWinterSpec({
     // @ts-expect-error
     auth: "session_token",
     methods: ["GET"],
   })
 
-  withEdgeSpec({
+  withWinterSpec({
     // @ts-expect-error
     auth: ["session_token"],
     methods: ["GET"],
@@ -86,30 +86,30 @@ test.skip("cannot select non-existent auth methods", () => {
 })
 
 test.skip("can select existing middleware", () => {
-  const withEdgeSpec = createWithEdgeSpec({
+  const withWinterSpec = createWithWinterSpec({
     authMiddleware: {
       session_token: (req, ctx, next) => next(req, ctx),
     },
   })
 
-  withEdgeSpec({
+  withWinterSpec({
     auth: "session_token",
     methods: ["GET"],
   })
 
-  withEdgeSpec({
+  withWinterSpec({
     auth: ["session_token"],
     methods: ["GET"],
   })
 })
 
 test.skip("middleware objects are available", () => {
-  const withEdgeSpec = createWithEdgeSpec({
+  const withWinterSpec = createWithWinterSpec({
     authMiddleware: {},
     beforeAuthMiddleware: [withName],
   })
 
-  withEdgeSpec({
+  withWinterSpec({
     auth: "none",
     methods: ["GET"],
   })((req, ctx) => {
@@ -120,13 +120,13 @@ test.skip("middleware objects are available", () => {
 })
 
 test.skip("auth middleware objects are available as singleton", () => {
-  const withEdgeSpec = createWithEdgeSpec({
+  const withWinterSpec = createWithWinterSpec({
     authMiddleware: {
       session_token: withSessionToken,
     },
   })
 
-  withEdgeSpec({
+  withWinterSpec({
     auth: "session_token",
     methods: ["GET"],
   })((req, ctx) => {
@@ -139,7 +139,7 @@ test.skip("auth middleware objects are available as singleton", () => {
 })
 
 test.skip("auth middleware objects are available as union", () => {
-  const withEdgeSpec = createWithEdgeSpec({
+  const withWinterSpec = createWithWinterSpec({
     authMiddleware: {
       session_token: withSessionToken,
       pat: withPat,
@@ -147,7 +147,7 @@ test.skip("auth middleware objects are available as union", () => {
     },
   })
 
-  withEdgeSpec({
+  withWinterSpec({
     auth: ["session_token", "pat"],
     methods: ["GET"],
   })((req, ctx) => {
@@ -165,11 +165,11 @@ test.skip("auth middleware objects are available as union", () => {
 })
 
 test.skip("route-local middlewares are available to request", () => {
-  const withEdgeSpec = createWithEdgeSpec({
+  const withWinterSpec = createWithWinterSpec({
     authMiddleware: {},
   })
 
-  withEdgeSpec({
+  withWinterSpec({
     auth: "none",
     methods: ["GET"],
     middleware: [withName],
@@ -195,13 +195,13 @@ test.skip("route-local middleware with request dependencies works", () => {
     return next(req, ctx)
   }
 
-  const withEdgeSpec = createWithEdgeSpec({
+  const withWinterSpec = createWithWinterSpec({
     authMiddleware: {
       simple: withFoo,
     },
   })
 
-  withEdgeSpec({
+  withWinterSpec({
     // todo: should not work with none
     auth: "simple",
     methods: ["GET"],
@@ -214,11 +214,11 @@ test.skip("route-local middleware with request dependencies works", () => {
 })
 
 test.skip("custom response map types are enforced", () => {
-  const withEdgeSpec = createWithEdgeSpec({
+  const withWinterSpec = createWithWinterSpec({
     authMiddleware: {},
   })
 
-  withEdgeSpec({
+  withWinterSpec({
     auth: "none",
     methods: ["GET"],
     customResponseMap: {
@@ -227,16 +227,16 @@ test.skip("custom response map types are enforced", () => {
     },
     // @ts-expect-error
   })(() => {
-    return EdgeSpecResponse.custom("not a number", "custom/response")
+    return WinterSpecResponse.custom("not a number", "custom/response")
   })({} as any, getDefaultContext())
 })
 
 test.skip("route param types", () => {
-  const withEdgeSpec = createWithEdgeSpec({
+  const withWinterSpec = createWithWinterSpec({
     authMiddleware: {},
   })
 
-  withEdgeSpec({
+  withWinterSpec({
     auth: "none",
     methods: ["GET"],
     routeParams: z.object({ id: z.coerce.number() }),
@@ -253,13 +253,13 @@ const middlewareWithInputs: Middleware<{ x: number }, { y: number }> = (
 ) => next(req, ctx)
 
 test.skip("allows middleware with inputs", () => {
-  const withEdgeSpec = createWithEdgeSpec({
+  const withWinterSpec = createWithWinterSpec({
     authMiddleware: {
       test: middlewareWithInputs,
     },
   })
 
-  withEdgeSpec({
+  withWinterSpec({
     auth: "test",
     methods: ["GET"],
     routeParams: z.object({ id: z.coerce.number() }),
@@ -270,13 +270,13 @@ test.skip("allows middleware with inputs", () => {
 })
 
 test.skip("typed ctx.json()", () => {
-  const withEdgeSpec = createWithEdgeSpec({
+  const withWinterSpec = createWithWinterSpec({
     authMiddleware: {
       test: middlewareWithInputs,
     },
   })
 
-  withEdgeSpec({
+  withWinterSpec({
     auth: "test",
     methods: ["GET"],
     jsonResponse: z.object({
@@ -308,13 +308,13 @@ test.skip("middlewares have routeParams which can be typed", () => {
 })
 
 test.skip("urlEncodedFormData can be .refine()ed", () => {
-  const withEdgeSpec = createWithEdgeSpec({
+  const withWinterSpec = createWithWinterSpec({
     authMiddleware: {
       test: middlewareWithInputs,
     },
   })
 
-  withEdgeSpec({
+  withWinterSpec({
     auth: "test",
     methods: ["GET"],
     urlEncodedFormData: z
@@ -329,7 +329,7 @@ test.skip("urlEncodedFormData can be .refine()ed", () => {
 })
 
 test.skip("cascading partial middlewares", () => {
-  const withEdgeSpec = createWithEdgeSpec({
+  const withWinterSpec = createWithWinterSpec({
     beforeAuthMiddleware: [
       {} as unknown as Middleware<{ a: string }, { a: string }>,
       {} as unknown as Middleware<{ a?: string }, { a: string }>,
@@ -337,7 +337,7 @@ test.skip("cascading partial middlewares", () => {
     authMiddleware: {},
   })
 
-  withEdgeSpec({
+  withWinterSpec({
     auth: "none",
     methods: ["GET"],
     urlEncodedFormData: z

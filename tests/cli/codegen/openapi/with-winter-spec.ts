@@ -1,6 +1,6 @@
-import { createWithEdgeSpec } from "../../../../src/index.js"
+import { createWithWinterSpec } from "../../../../src/index.js"
 
-export const withEdgeSpec = createWithEdgeSpec({
+export const withWinterSpec = createWithWinterSpec({
   openapi: {
     apiName: "openapi-example",
     productionServerUrl: "https://example.com",

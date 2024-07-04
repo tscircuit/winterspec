@@ -9,12 +9,12 @@ import type {
   GlobalSpec,
 } from "./global-spec.js"
 import type {
-  EdgeSpecCustomResponse,
-  EdgeSpecMultiPartFormDataResponse,
-  EdgeSpecJsonResponse,
-  EdgeSpecRouteFn,
+  WinterSpecCustomResponse,
+  WinterSpecMultiPartFormDataResponse,
+  WinterSpecJsonResponse,
+  WinterSpecRouteFn,
   HTTPMethods,
-  EdgeSpecRouteParams,
+  WinterSpecRouteParams,
 } from "./web-handler.js"
 import { ResponseTypeToContext } from "./context.js"
 
@@ -46,11 +46,11 @@ export type RouteSpec<AuthMiddlewares extends string> = {
   onMultipleAuthMiddlewareFailures?: (errors: unknown[]) => void
 }
 
-type CustomResponseMapToEdgeSpecResponse<
+type CustomResponseMapToWinterSpecResponse<
   M extends Record<string, z.ZodTypeAny>,
   K extends keyof M = keyof M,
 > = K extends keyof M & string
-  ? EdgeSpecCustomResponse<z.output<M[K]>, K>
+  ? WinterSpecCustomResponse<z.output<M[K]>, K>
   : never
 
 type GetRouteSpecResponseType<
@@ -58,15 +58,15 @@ type GetRouteSpecResponseType<
   RS extends RouteSpec<GetAuthMiddlewaresFromGlobalSpec<GS>>,
 > =
   | (RS["jsonResponse"] extends z.ZodTypeAny
-      ? EdgeSpecJsonResponse<z.output<RS["jsonResponse"]>>
+      ? WinterSpecJsonResponse<z.output<RS["jsonResponse"]>>
       : never)
   | (RS["multipartFormDataResponse"] extends z.ZodObject<any>
-      ? EdgeSpecMultiPartFormDataResponse<
+      ? WinterSpecMultiPartFormDataResponse<
           z.output<RS["multipartFormDataResponse"]>
         >
       : never)
   | (RS["customResponseMap"] extends Record<string, z.ZodTypeAny>
-      ? CustomResponseMapToEdgeSpecResponse<RS["customResponseMap"]>
+      ? CustomResponseMapToWinterSpecResponse<RS["customResponseMap"]>
       : never)
   | Response
 
@@ -99,7 +99,7 @@ type GetMiddlewareRequestOptions<
     : {}) &
   (RS["routeParams"] extends infer ZT extends z.ZodTypeAny
     ? { routeParams: z.output<ZT> }
-    : { routeParams: EdgeSpecRouteParams })
+    : { routeParams: WinterSpecRouteParams })
 
 type GetMiddlewareRequestContext<
   GS extends GlobalSpec,
@@ -136,10 +136,10 @@ type GetMiddlewareRequestContext<
     "intersection"
   >
 
-export type EdgeSpecRouteFnFromSpecs<
+export type WinterSpecRouteFnFromSpecs<
   GS extends GlobalSpec,
   RS extends RouteSpec<GetAuthMiddlewaresFromGlobalSpec<GS>>,
-> = EdgeSpecRouteFn<
+> = WinterSpecRouteFn<
   GetMiddlewareRequestOptions<GS, RS>,
   GetRouteSpecResponseType<GS, RS>,
   GetMiddlewareRequestContext<GS, RS> &
@@ -150,4 +150,4 @@ export type CreateWithRouteSpecFn<GS extends GlobalSpec> = <
   const RS extends RouteSpec<GetAuthMiddlewaresFromGlobalSpec<GS>>,
 >(
   routeSpec: RS
-) => (route: EdgeSpecRouteFnFromSpecs<GS, RS>) => EdgeSpecRouteFn
+) => (route: WinterSpecRouteFnFromSpecs<GS, RS>) => WinterSpecRouteFn

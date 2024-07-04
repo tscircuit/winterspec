@@ -1,6 +1,6 @@
 import test from "ava"
 import { GlobalSpec } from "src/types/global-spec.js"
-import { EdgeSpecResponse } from "src/types/web-handler.js"
+import { WinterSpecResponse } from "src/types/web-handler.js"
 import { getTestRoute } from "tests/fixtures/get-test-route.js"
 import { z } from "zod"
 import formurlencoded from "form-urlencoded"
@@ -38,7 +38,9 @@ test("validates json response success", async (t) => {
       }),
     },
     routeFn: (req) => {
-      return EdgeSpecResponse.json({ message: `hello, ${req.jsonBody.name}!` })
+      return WinterSpecResponse.json({
+        message: `hello, ${req.jsonBody.name}!`,
+      })
     },
     routePath: "/hello",
   })
@@ -63,7 +65,9 @@ test("validates json response failure", async (t) => {
       }),
     },
     routeFn: (req) => {
-      return EdgeSpecResponse.json({ message: `hello, ${req.jsonBody.name}!` })
+      return WinterSpecResponse.json({
+        message: `hello, ${req.jsonBody.name}!`,
+      })
     },
     routePath: "/hello",
   })
@@ -92,7 +96,7 @@ test("validates form data response success", async (t) => {
       }),
     },
     routeFn: (req) => {
-      return EdgeSpecResponse.json({
+      return WinterSpecResponse.json({
         message: `hello, ${req.multiPartFormData.name}!`,
       })
     },
@@ -125,7 +129,7 @@ test("validates form data response failure", async (t) => {
       }),
     },
     routeFn: (req) => {
-      return EdgeSpecResponse.json({
+      return WinterSpecResponse.json({
         message: `hello, ${req.multiPartFormData.name}!`,
       })
     },
@@ -158,7 +162,7 @@ test("validates url encoded response success", async (t) => {
       }),
     },
     routeFn: (req) => {
-      return EdgeSpecResponse.json({
+      return WinterSpecResponse.json({
         message: `hello, ${req.urlEncodedFormData.name}!`,
       })
     },
@@ -198,7 +202,7 @@ test("validates url encoded response failure", async (t) => {
       }),
     },
     routeFn: (req) => {
-      return EdgeSpecResponse.json({
+      return WinterSpecResponse.json({
         message: `hello, ${req.urlEncodedFormData.name}!`,
       })
     },
@@ -239,7 +243,7 @@ test("commonParams supports json and query params", async (t) => {
       }),
     },
     routeFn: (req) => {
-      return EdgeSpecResponse.json({
+      return WinterSpecResponse.json({
         message: `hello, ${req.commonParams.first_name} ${req.commonParams.last_name}!`,
       })
     },
@@ -283,7 +287,7 @@ test("validate query params success", async (t) => {
       }),
     },
     routeFn: (req) => {
-      return EdgeSpecResponse.json({
+      return WinterSpecResponse.json({
         message: `hello, ${req.query.name}!`,
       })
     },
@@ -319,7 +323,7 @@ test("validate query params failure", async (t) => {
       }),
     },
     routeFn: (req) => {
-      return EdgeSpecResponse.json({
+      return WinterSpecResponse.json({
         message: `hello, ${req.query.name}!`,
       })
     },
@@ -355,7 +359,7 @@ test("validate route params", async (t) => {
       }),
     },
     routeFn: (req) => {
-      return EdgeSpecResponse.json({
+      return WinterSpecResponse.json({
         value: req.routeParams.world,
       })
     },
@@ -384,7 +388,7 @@ test("allows getting json", async (t) => {
       }),
     },
     routeFn: async (req) => {
-      return EdgeSpecResponse.json(await req.json())
+      return WinterSpecResponse.json(await req.json())
     },
     routePath: "/hello/world",
   })

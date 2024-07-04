@@ -1,15 +1,15 @@
 # Embedding as a module
 
-You can embed an EdgeSpec service inside other applications.
+You can embed an WinterSpec service inside other applications.
 
 For example, say you want to embed an API for ships in Star Wars inside an API for all things Star Wars:
 
 ```ts
 // api/ships/[...modulePath].ts
-import { withEdgeSpec } from "../with-edge-spec"
+import { withWinterSpec } from "../with-winter-spec"
 import { z } from "zod"
 
-export default withEdgeSpec({
+export default withWinterSpec({
   auth: "none",
   methods: ["GET"],
 })((req) => {

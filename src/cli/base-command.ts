@@ -1,6 +1,6 @@
 import { Command, Option } from "clipanion"
 import * as t from "typanion"
-import { ResolvedEdgeSpecConfig, loadConfig } from "src/config/utils.js"
+import { ResolvedWinterSpecConfig, loadConfig } from "src/config/utils.js"
 
 export abstract class BaseCommand extends Command {
   rootDirectory = Option.String("--root", {
@@ -33,5 +33,5 @@ export abstract class BaseCommand extends Command {
     )
   }
 
-  abstract run(config: ResolvedEdgeSpecConfig): Promise<number | void>
+  abstract run(config: ResolvedWinterSpecConfig): Promise<number | void>
 }

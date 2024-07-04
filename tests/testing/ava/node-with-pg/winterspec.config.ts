@@ -1,4 +1,4 @@
-import { defineConfig } from "edgespec"
+import { defineConfig } from "winterspec"
 
 export default defineConfig({
   platform: "node",

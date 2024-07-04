@@ -20,7 +20,7 @@ export const bundleAndWatch = async (options: BundleOptions) => {
     ignoreInitial: true,
     debounce: 0,
     ignore: (filePath: string) => {
-      if (filePath.includes(".edgespec")) {
+      if (filePath.includes(".winterspec")) {
         return true
       }
 

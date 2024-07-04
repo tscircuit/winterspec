@@ -1,6 +1,6 @@
-import { EdgeSpecRouteFn } from "src/types/web-handler.js"
+import { WinterSpecRouteFn } from "src/types/web-handler.js"
 
-const getUser: EdgeSpecRouteFn = async (request) => {
+const getUser: WinterSpecRouteFn = async (request) => {
   return Response.json({
     userId: request.routeParams.userId,
   })

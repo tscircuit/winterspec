@@ -19,7 +19,7 @@ const edgeSpecConfigSchema = z
      *
      * Defaults to `wintercg-minimal`, and you should use this whenever possible for maximal compatibility.
      *
-     * Check [the docs](https://github.com/seamapi/edgespec/blob/main/docs/edgespec-config.md) for more information.
+     * Check [the docs](https://github.com/seamapi/winterspec/blob/main/docs/winterspec-config.md) for more information.
      */
     platform: z
       .enum(["node", "wintercg-minimal"])
@@ -28,9 +28,9 @@ const edgeSpecConfigSchema = z
   })
   .strict()
 
-export type EdgeSpecConfig = z.infer<typeof edgeSpecConfigSchema>
+export type WinterSpecConfig = z.infer<typeof edgeSpecConfigSchema>
 
-export const defineConfig = (config: EdgeSpecConfig): EdgeSpecConfig => {
+export const defineConfig = (config: WinterSpecConfig): WinterSpecConfig => {
   const parsedConfig = edgeSpecConfigSchema.safeParse(config)
 
   if (parsedConfig.success) {

@@ -1,7 +1,7 @@
-import { createWithEdgeSpec } from "dist"
+import { createWithWinterSpec } from "dist"
 import { withDefaultExceptionHandling } from "dist/middleware"
 
-export const withEdgeSpec = createWithEdgeSpec({
+export const withWinterSpec = createWithWinterSpec({
   apiName: "hello-world",
   productionServerUrl: "https://example.com",
 

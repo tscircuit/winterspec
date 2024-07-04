@@ -1,6 +1,6 @@
 # Global route config
 
-Every EdgeSpec project has a global wrapper defined in a file often called `with-edge-spec.ts`. This defines things like:
+Every WinterSpec project has a global wrapper defined in a file often called `with-winter-spec.ts`. This defines things like:
 
 - Authentication methods
 - Global middleware
@@ -9,10 +9,10 @@ Every EdgeSpec project has a global wrapper defined in a file often called `with
 Here's an example:
 
 ```ts
-// src/with-edge-spec.ts
-import { createWithEdgeSpec } from "edgespec"
+// src/with-winter-spec.ts
+import { createWithWinterSpec } from "winterspec"
 
-export const withEdgeSpec = createWithEdgeSpec({
+export const withWinterSpec = createWithWinterSpec({
   beforeAuthMiddleware: [],
   authMiddleware: {},
   afterAuthMiddleware: [],

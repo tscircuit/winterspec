@@ -1,7 +1,7 @@
 import { Option } from "clipanion"
 import fs from "node:fs/promises"
 import { BaseCommand } from "src/cli/base-command.js"
-import { ResolvedEdgeSpecConfig } from "src/config/utils.js"
+import { ResolvedWinterSpecConfig } from "src/config/utils.js"
 import { extractRouteSpecsFromAST } from "src/lib/codegen/extract-route-specs-from-ast.js"
 
 export class CodeGenRouteTypes extends BaseCommand {
@@ -12,7 +12,7 @@ export class CodeGenRouteTypes extends BaseCommand {
     required: true,
   })
 
-  async run(config: ResolvedEdgeSpecConfig) {
+  async run(config: ResolvedWinterSpecConfig) {
     const { project, routes, renderType } = await extractRouteSpecsFromAST({
       tsConfigFilePath: config.tsconfigPath,
       routesDirectory: config.routesDirectory,
