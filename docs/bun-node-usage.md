@@ -7,11 +7,13 @@ create a server with dynamic imports using the node adapter.
 ## Bun
 
 ```ts
-import { createFetchHandlerFromRoutes } from "winterspec/adapters/node"
+import { createFetchHandlerFromDir } from "winterspec/adapters/node"
+
+const serverFetch = await createFetchHandlerFromDir("./routes")
 
 Bun.serve({
-  port: 3000,
-  fetch: createFetchHandlerFromRoutes("./routes"),
+  fetch: (req) => serverFetch(req),
+  port: 3021,
 })
 ```
 
