@@ -55,6 +55,6 @@ WinterSpec may not be the right choice for your project. This list is not exhaus
 - If your project is mainly frontend with a few API routes:
   - [Next.js](https://nextjs.org/)
 
-## Acknowledges
+## Acknowledgements
 
 - [originally a fork of winterspec from Seam](https://github.com/seamapi/winterspec)
