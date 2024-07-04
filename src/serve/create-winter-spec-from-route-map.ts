@@ -1,10 +1,5 @@
-import { createServer } from "node:http"
 import { getRouteMatcher } from "next-route-matcher"
 import { normalizeRouteMap } from "../lib/normalize-route-map.js"
-import {
-  type TransformToNodeOptions,
-  transformToNodeBuilder,
-} from "src/edge/transform-to-node.js"
 import { WinterSpecRouteFn } from "src/types/web-handler.js"
 import {
   WinterSpecRouteBundle,
@@ -35,20 +30,4 @@ export const createWinterSpecFromRouteMap = (
   }
 
   return winterSpec
-}
-
-export const createNodeServerFromRouteMap = async (
-  routeMap: Record<string, WinterSpecRouteFn>,
-  transformToNodeOptions: TransformToNodeOptions,
-  winterSpecOptions?: Partial<WinterSpecOptions>
-) => {
-  const winterSpec = createWinterSpecFromRouteMap(routeMap, winterSpecOptions)
-
-  const transformToNode = transformToNodeBuilder(transformToNodeOptions)
-
-  const server = createServer(
-    transformToNode(makeRequestAgainstWinterSpec(winterSpec))
-  )
-
-  return server
 }

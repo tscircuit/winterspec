@@ -78,12 +78,12 @@ export class RequestHandlerController {
         new Response(BUILD_ERROR_MESSAGE, { status: 500 })
     } else {
       // We append the timestamp to the path to bust the cache
-      const edgeSpecModule = await loadBundle(
+      const winterSpecModule = await loadBundle(
         `file:${build.bundlePath}#${Date.now()}`
       )
 
       this.cachedNodeHandler = async (req) =>
-        edgeSpecModule.makeRequest(req, {
+        winterSpecModule.makeRequest(req, {
           middleware: this.middleware,
         })
     }

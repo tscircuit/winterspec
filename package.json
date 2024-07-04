@@ -19,6 +19,11 @@
       "require": "./dist/config/index.js",
       "types": "./dist/config/index.d.ts"
     },
+    "./bun": {
+      "import": "./dist/bun/index.js",
+      "require": "./dist/bun/index.js",
+      "types": "./dist/bun/index.d.ts"
+    },
     "./dev": {
       "import": "./dist/dev/index.js",
       "require": "./dist/dev/index.js",
@@ -56,7 +61,7 @@
     "format": "prettier --write .",
     "lint": "prettier --check .",
     "cli:dev": "tsx src/cli/cli.ts",
-    "example:hello-world": "node --loader=tsx --no-warnings ./src/cli/cli.js serve ./examples/hello-world/routes"
+    "example:hello-world": "node --import=tsx --no-warnings ./src/cli/cli.js serve ./examples/hello-world/routes"
   },
   "bin": {
     "winterspec": "./dist/cli/cli.js"

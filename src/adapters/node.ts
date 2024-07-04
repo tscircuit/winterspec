@@ -12,13 +12,13 @@ export interface WinterSpecNodeAdapterOptions {
 export const getNodeHandler: WinterSpecAdapter<
   [WinterSpecNodeAdapterOptions],
   NodeHandler
-> = (edgeSpec, { port, middleware = [] }) => {
+> = (winterSpec, { port, middleware = [] }) => {
   const transformToNode = transformToNodeBuilder({
     defaultOrigin: `http://localhost${port ? `:${port}` : ""}`,
   })
 
   return transformToNode((req) =>
-    edgeSpec.makeRequest(req, {
+    winterSpec.makeRequest(req, {
       middleware,
     })
   )
@@ -27,8 +27,8 @@ export const getNodeHandler: WinterSpecAdapter<
 export const startServer: WinterSpecAdapter<
   [WinterSpecNodeAdapterOptions],
   Promise<http.Server>
-> = async (edgeSpec, opts) => {
-  const server = http.createServer(getNodeHandler(edgeSpec, opts))
+> = async (winterSpec, opts) => {
+  const server = http.createServer(getNodeHandler(winterSpec, opts))
 
   const { port } = opts
 

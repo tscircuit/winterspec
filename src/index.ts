@@ -9,3 +9,6 @@ export {
   WinterSpecResponse,
 } from "./types/web-handler.js"
 export * from "./helpers.js"
+// export { getDefaultContext } from "./types/context.js"
+// export { createRouteMapFromDirectory } from "./routes/create-route-map-from-directory.js"
+// export { createWinterSpecFromRouteMap } from "./serve/create-winter-spec-from-route-map.js"

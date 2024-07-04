@@ -23,7 +23,7 @@ export type HeadersDescriptor = Headers | HeadersInit
 
 export interface WinterSpecRequestOptions {
   routeParams: WinterSpecRouteParams
-  edgeSpec: WinterSpecRouteBundle
+  winterSpec: WinterSpecRouteBundle
 }
 
 export type WinterSpecRequest<T = {}> = WinterSpecRequestOptions & Request & T
