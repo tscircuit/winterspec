@@ -10,6 +10,7 @@ import { createRoutePathMapFromDirectory } from "../routes/create-route-map-from
 import { getDefaultContext } from "../types/context.js"
 import { createWinterSpecBundleFromDir } from "src/serve/create-winter-spec-bundle-from-dir.js"
 import { createWinterSpecFromRouteMap } from "src/serve/create-winter-spec-from-route-map.js"
+import * as EdgePrimitives from "@edge-runtime/primitives"
 
 export interface WinterSpecNodeAdapterOptions {
   middleware?: Middleware[]
@@ -61,7 +62,7 @@ export const createMakeRequestFromDir = async (dirPath: string) => {
 export const createFetchHandlerFromDir = async (dirPath: string) => {
   const makeRequest = await createMakeRequestFromDir(dirPath)
   const fetchFn: typeof fetch = (url, init) => {
-    return makeRequest(new Request(url, init))
+    return makeRequest(new EdgePrimitives.Request(url, init))
   }
   return fetchFn
 }
