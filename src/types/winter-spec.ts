@@ -25,7 +25,7 @@ export interface WinterSpecOptions {
   handle404?: WinterSpecRouteFn
 }
 
-interface MakeRequestOptions {
+export interface MakeRequestOptions {
   /**
    * Defaults to true. When true, we will attempt to automatically remove any pathname prefix from the request. This is useful when you're hosting an WinterSpec service on a subpath of your application.
    *

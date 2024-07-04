@@ -1,4 +1,4 @@
-import { createRouteMapFromDirectory } from "src/routes/create-route-map-from-directory.js"
+import { createRoutePathMapFromDirectory } from "src/routes/create-route-map-from-directory.js"
 import {
   WinterSpecOptions,
   WinterSpecRouteBundle,
@@ -11,7 +11,7 @@ export const createWinterSpecBundleFromDir = async (
   dirPath: string,
   options: WinterSpecConfig = {}
 ): Promise<WinterSpecRouteBundle> => {
-  const routeMapPaths = await createRouteMapFromDirectory(dirPath)
+  const routeMapPaths = await createRoutePathMapFromDirectory(dirPath)
 
   const routeMap = Object.fromEntries(
     await Promise.all(

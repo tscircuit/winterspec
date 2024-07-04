@@ -1,6 +1,6 @@
 {
   "name": "winterspec",
-  "version": "0.0.73",
+  "version": "0.0.74",
   "description": "Write Winter-CG compatible routes with filesystem routing and tons of features",
   "type": "module",
   "files": [
@@ -18,11 +18,6 @@
       "import": "./dist/config/index.js",
       "require": "./dist/config/index.js",
       "types": "./dist/config/index.d.ts"
-    },
-    "./bun": {
-      "import": "./dist/bun/index.js",
-      "require": "./dist/bun/index.js",
-      "types": "./dist/bun/index.d.ts"
     },
     "./dev": {
       "import": "./dist/dev/index.js",
