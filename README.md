@@ -1,5 +1,10 @@
 # ☃️ winterspec
 
+> [!NOTE]
+> This project is a fork of the awesome work of the
+> Seam team in the original [edgespec](https://github.com/seamapi/edgespec)
+> module. Please check them out and use the [Seam API](https://seam.co)!
+
 WinterSpec is an opinionated HTTP framework for TypeScript. Out of the box, it:
 
 - Uses filepath-based routing
