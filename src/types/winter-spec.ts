@@ -25,7 +25,7 @@ export interface WinterSpecOptions {
   handle404?: WinterSpecRouteFn
 }
 
-interface MakeRequestOptions {
+export interface MakeRequestOptions {
   /**
    * Defaults to true. When true, we will attempt to automatically remove any pathname prefix from the request. This is useful when you're hosting an WinterSpec service on a subpath of your application.
    *
@@ -58,13 +58,13 @@ export type WinterSpecRouteBundle = ReadonlyDeep<
 export type WinterSpecAdapter<
   Options extends Array<unknown> = [],
   ReturnValue = void,
-> = (edgeSpec: WinterSpecRouteBundle, ...options: Options) => ReturnValue
+> = (winterSpec: WinterSpecRouteBundle, ...options: Options) => ReturnValue
 
 type Foo = WinterSpecAdapter<[], Promise<Server>>
 type a = ReturnType<Foo>
 
 export function makeRequestAgainstWinterSpec(
-  edgeSpec: WinterSpecRouteBundle,
+  winterSpec: WinterSpecRouteBundle,
   options: MakeRequestOptions = {}
 ): (request: Request) => Promise<Response> {
   return async (request: Request) => {
@@ -75,7 +75,7 @@ export function makeRequestAgainstWinterSpec(
         new Response("Not found", {
           status: 404,
         }),
-    } = edgeSpec
+    } = winterSpec
 
     const { removePathnamePrefix, automaticallyRemovePathnamePrefix = true } =
       options
@@ -117,19 +117,19 @@ export function makeRequestAgainstWinterSpec(
 
     let routeFn = matchedRoute && routeMapWithHandlers[matchedRoute]
 
-    const edgeSpecRequest = createWinterSpecRequest(request, {
-      edgeSpec,
+    const winterSpecRequest = createWinterSpecRequest(request, {
+      winterSpec,
       routeParams: routeParams ?? {},
     })
 
     if (!routeFn) {
-      return await handle404(edgeSpecRequest, getDefaultContext())
+      return await handle404(winterSpecRequest, getDefaultContext())
     }
 
     return wrapMiddlewares(
       options.middleware ?? [],
       routeFn,
-      edgeSpecRequest,
+      winterSpecRequest,
       getDefaultContext()
     )
   }

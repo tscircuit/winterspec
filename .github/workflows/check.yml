@@ -38,7 +38,6 @@ jobs:
       fail-fast: false
       matrix:
         node:
-          - "18"
           - "20"
     steps:
       - name: Checkout
@@ -64,7 +63,6 @@ jobs:
         os:
           - ubuntu-latest
         node:
-          - "18"
           - "20"
         include:
           - os: ubuntu-latest
@@ -119,7 +117,6 @@ jobs:
       fail-fast: false
       matrix:
         node:
-          - "18"
           - "20"
     steps:
       - name: Checkout

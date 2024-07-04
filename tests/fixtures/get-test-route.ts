@@ -23,7 +23,7 @@ export const getTestRoute = async <
     routeSpec: RS
     routePath: string
     routeFn: WinterSpecRouteFnFromSpecs<GS, RS>
-    edgeSpecOptions?: Partial<WinterSpecOptions>
+    winterSpecOptions?: Partial<WinterSpecOptions>
   }
 ) => {
   const logs = {
@@ -70,7 +70,7 @@ export const getTestRoute = async <
     {
       defaultOrigin: `http://localhost:${port}`,
     },
-    opts.edgeSpecOptions
+    opts.winterSpecOptions
   )
 
   app.listen(port)

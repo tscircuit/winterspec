@@ -20,7 +20,7 @@ Create an `entrypoint.mjs` file:
 ```js
 import { addFetchListener } from "winterspec/adapters/wintercg-minimal"
 import bundle from "./dist/built"
-addFetchListener(edgeSpec)
+addFetchListener(winterSpec)
 ```
 
 Because WinterCG doesn't allow `import`s, you'll need to bundle a second time with a tool like [tsup](https://github.com/egoist/tsup): `tsup entrypoint.mjs`.

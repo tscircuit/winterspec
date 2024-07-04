@@ -1,5 +1,5 @@
 import path from "node:path"
-import { createRouteMapFromDirectory } from "src/routes/create-route-map-from-directory.js"
+import { createRoutePathMapFromDirectory } from "src/routes/create-route-map-from-directory.js"
 
 const alphabet = "zyxwvutsrqponmlkjihgfedcba"
 
@@ -16,7 +16,9 @@ interface ConstructManifestOptions {
 }
 
 export const constructManifest = async (options: ConstructManifestOptions) => {
-  const routeMap = await createRouteMapFromDirectory(options.routesDirectory)
+  const routeMap = await createRoutePathMapFromDirectory(
+    options.routesDirectory
+  )
 
   const routes = Object.entries(routeMap).map(([route, { relativePath }]) => {
     return {
@@ -43,19 +45,19 @@ const routeMapWithHandlers = {
   ${routes.map(({ id, route }) => `"${route}": ${id}.default`).join(",")}
 }
 
-const edgeSpec = {
+const winterSpec = {
   routeMatcher: getRouteMatcher(Object.keys(routeMapWithHandlers)),
   routeMapWithHandlers,
-  makeRequest: async (req, options) => makeRequestAgainstWinterSpec(edgeSpec, options)(req)
+  makeRequest: async (req, options) => makeRequestAgainstWinterSpec(winterSpec, options)(req)
 }
 
 ${
   options.bundledAdapter === "wintercg-minimal"
     ? `
 import {addFetchListener} from "winterspec/adapters/wintercg-minimal"
-addFetchListener(edgeSpec)
+addFetchListener(winterSpec)
 `
-    : "export default edgeSpec"
+    : "export default winterSpec"
 }
   `.trim()
 }

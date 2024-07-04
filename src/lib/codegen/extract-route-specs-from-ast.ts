@@ -1,5 +1,5 @@
 import path from "node:path"
-import { createRouteMapFromDirectory } from "src/routes/create-route-map-from-directory.js"
+import { createRoutePathMapFromDirectory } from "src/routes/create-route-map-from-directory.js"
 import {
   ExportedDeclarations,
   Project,
@@ -55,7 +55,7 @@ export const extractRouteSpecsFromAST = async ({
 
   let firstValidRouteDefaultExport: ExportedDeclarations
 
-  const routeMap = await createRouteMapFromDirectory(routesDirectory)
+  const routeMap = await createRoutePathMapFromDirectory(routesDirectory)
   const routes = Object.entries(routeMap).map(([route, { relativePath }]) => {
     const source = project.getSourceFileOrThrow(
       path.join(routesDirectory, relativePath)

@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-const edgeSpecConfigSchema = z
+const winterSpecConfigSchema = z
   .object({
     /**
      * Defaults to the current working directory.
@@ -28,10 +28,10 @@ const edgeSpecConfigSchema = z
   })
   .strict()
 
-export type WinterSpecConfig = z.infer<typeof edgeSpecConfigSchema>
+export type WinterSpecConfig = z.infer<typeof winterSpecConfigSchema>
 
 export const defineConfig = (config: WinterSpecConfig): WinterSpecConfig => {
-  const parsedConfig = edgeSpecConfigSchema.safeParse(config)
+  const parsedConfig = winterSpecConfigSchema.safeParse(config)
 
   if (parsedConfig.success) {
     return parsedConfig.data

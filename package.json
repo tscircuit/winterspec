@@ -56,7 +56,7 @@
     "format": "prettier --write .",
     "lint": "prettier --check .",
     "cli:dev": "tsx src/cli/cli.ts",
-    "example:hello-world": "node --loader=tsx --no-warnings ./src/cli/cli.js serve ./examples/hello-world/routes"
+    "example:hello-world": "node --import=tsx --no-warnings ./src/cli/cli.js serve ./examples/hello-world/routes"
   },
   "bin": {
     "winterspec": "./dist/cli/cli.js"
