@@ -16,7 +16,7 @@ export const createWinterSpecBundleFromDir = async (
   const routeMap = Object.fromEntries(
     await Promise.all(
       Object.entries(routeMapPaths).map(async ([route, { relativePath }]) => {
-        return [route, await import(join(dirPath, relativePath))]
+        return [route, (await import(join(dirPath, relativePath))).default]
       })
     )
   )
