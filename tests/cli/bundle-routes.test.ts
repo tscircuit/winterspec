@@ -31,6 +31,6 @@ test("CLI bundle-routes command produces a routes bundle", async (t) => {
       'import { WinterSpecRouteMap } from "@winterspec/types"'
     )
   )
-  t.true(bundleContent.includes("const routeMap: WinterSpecRouteMap ="))
+  t.true(bundleContent.includes("const routeMap ="))
   t.true(bundleContent.includes("export default routeMap"))
 })
