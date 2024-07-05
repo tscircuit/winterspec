@@ -24,7 +24,8 @@ test("CLI bundle-routes command produces a routes bundle", async (t) => {
   const result = await execution.waitUntilExit()
   t.is(result.exitCode, 0)
 
-  const bundleContent = await fs.readFile(tempPath, 'utf-8')
-  t.true(bundleContent.includes('export const routeMapWithHandlers ='))
-  t.true(bundleContent.includes('export const routeMatcher ='))
+  const bundleContent = await fs.readFile(tempPath, "utf-8")
+  console.log(bundleContent)
+  t.true(bundleContent.includes("export const routeMapWithHandlers ="))
+  t.true(bundleContent.includes("export const routeMatcher ="))
 })
