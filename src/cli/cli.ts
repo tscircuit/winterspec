@@ -11,5 +11,11 @@ runExit(
     binaryLabel: "WinterSpec",
     binaryName: "winterspec",
   },
-  [BundleCommand, DevCommand, CodeGenRouteTypes, CodeGenOpenAPI, BundleRoutesCommand]
+  [
+    BundleCommand,
+    DevCommand,
+    CodeGenRouteTypes,
+    CodeGenOpenAPI,
+    BundleRoutesCommand,
+  ]
 )
