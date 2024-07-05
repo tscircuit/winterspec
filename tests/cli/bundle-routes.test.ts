@@ -26,6 +26,11 @@ test("CLI bundle-routes command produces a routes bundle", async (t) => {
 
   const bundleContent = await fs.readFile(tempPath, "utf-8")
   console.log(bundleContent)
-  t.true(bundleContent.includes("export const routeMapWithHandlers ="))
-  t.true(bundleContent.includes("export const routeMatcher ="))
+  t.true(
+    bundleContent.includes(
+      'import { WinterSpecRouteMap } from "@winterspec/types"'
+    )
+  )
+  t.true(bundleContent.includes("const routeMap: WinterSpecRouteMap ="))
+  t.true(bundleContent.includes("export default routeMap"))
 })
