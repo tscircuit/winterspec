@@ -38,7 +38,13 @@ import { afterEach, beforeEach } from "bun:test"
 import defaultAxios from "redaxios"
 import path from "path"
 
-beforeEach(async () => {
+interface TestFixture {
+  url: string
+  server: any
+  axios: typeof defaultAxios
+}
+
+export const getTestFixture = async (): Promise<TestFixture> => {
   const port = 3001 + Math.floor(Math.random() * 999)
   const server = await startServerFromRoutesDir(
     path.join(import.meta.url, "../../../routes"),
@@ -57,15 +63,16 @@ beforeEach(async () => {
   const axios = defaultAxios.create({
     baseURL: url,
   })
-  ;(global as any).fixture = {
+
+  afterEach(() => {
+    console.log("closing server")
+    server.close()
+  })
+
+  return {
     url,
     server,
     axios,
   }
-})
-
-afterEach(() => {
-  ;(global as any).fixture.server.stop()
-})
-
+}
 ```
