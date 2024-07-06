@@ -36,23 +36,28 @@ server. Here's an example of how you might do that in bun:
 import { startServerFromRoutesDir } from "winterspec/adapters/node"
 import { afterEach, beforeEach } from "bun:test"
 import defaultAxios from "redaxios"
+import path from "path"
 
 beforeEach(async () => {
-  const server = await startServerFromRoutesDir("./routes", {
-    port: 3001 + Math.floor(Math.random() * 999),
-    middleware: [
-      (req, ctx, next) => {
-        ctx.res.setHeader("x-test", "true")
-        // This is also a good place to fixture a database!
-        return next()
-      },
-    ],
-  })
-  const url = `http://localhost:${server.port}`
+  const port = 3001 + Math.floor(Math.random() * 999)
+  const server = await startServerFromRoutesDir(
+    path.join(import.meta.url, "../../../routes"),
+    {
+      port,
+      middleware: [
+        (req, ctx, next) => {
+          // ctx.res.setHeader("x-test", "true")
+          // This is also a good place to fixture a database!
+          return next(req, ctx)
+        },
+      ],
+    }
+  )
+  const url = `http://localhost:${port}`
   const axios = defaultAxios.create({
     baseURL: url,
   })
-  global.fixture = {
+  ;(global as any).fixture = {
     url,
     server,
     axios,
@@ -60,6 +65,7 @@ beforeEach(async () => {
 })
 
 afterEach(() => {
-  global.fixture.server.stop()
+  ;(global as any).fixture.server.stop()
 })
+
 ```
