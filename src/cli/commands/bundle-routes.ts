@@ -47,7 +47,7 @@ const routeMap = {
   ${Object.entries(routeMap)
     .map(
       ([route, { relativePath }]) =>
-        `"${route}": (await import('${path.join(
+        `"${route}": (await import('./${path.join(
           relativeOutputDir,
           this.routesDirectory,
           relativePath
