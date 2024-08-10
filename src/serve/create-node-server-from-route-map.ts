@@ -10,6 +10,7 @@ import {
   WinterSpecRouteBundle,
   WinterSpecOptions,
   makeRequestAgainstWinterSpec,
+  MakeRequestOptions,
 } from "src/types/winter-spec.js"
 
 export const createWinterSpecFromRouteMap = (
@@ -29,8 +30,8 @@ export const createWinterSpecFromRouteMap = (
   const winterSpec = {
     routeMatcher,
     routeMapWithHandlers,
-    makeRequest: async (req: Request) =>
-      makeRequestAgainstWinterSpec(winterSpec)(req),
+    makeRequest: async (req: Request, opts?: MakeRequestOptions) =>
+      makeRequestAgainstWinterSpec(winterSpec, opts)(req),
     ...winterSpecOptions,
   }
 
