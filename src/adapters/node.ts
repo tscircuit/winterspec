@@ -17,6 +17,10 @@ export interface WinterSpecNodeAdapterOptions {
   port?: number
 }
 
+export interface WinterSpecFetchOptions {
+  middleware?: Middleware[]
+}
+
 export const getNodeHandler: WinterSpecAdapter<
   [WinterSpecNodeAdapterOptions],
   NodeHandler
@@ -59,10 +63,15 @@ export const createMakeRequestFromDir = async (dirPath: string) => {
   return winterSpec.makeRequest
 }
 
-export const createFetchHandlerFromDir = async (dirPath: string) => {
+export const createFetchHandlerFromDir = async (
+  dirPath: string,
+  opts: WinterSpecFetchOptions = {}
+) => {
   const makeRequest = await createMakeRequestFromDir(dirPath)
   const fetchFn: typeof fetch = (url, init) => {
-    return makeRequest(new EdgePrimitives.Request(url, init))
+    return makeRequest(new EdgePrimitives.Request(url, init), {
+      middleware: opts.middleware,
+    })
   }
   return fetchFn
 }
