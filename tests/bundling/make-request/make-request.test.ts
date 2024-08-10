@@ -38,6 +38,25 @@ test.serial("simple request works", async (t) => {
   t.is(await response.text(), "ok")
 })
 
+test.serial("custom middleware works", async (t) => {
+  const bundle = await createAndLoadBundle(t)
+  t.truthy(bundle.makeRequest)
+
+  const response = await bundle.makeRequest(
+    new Request(new URL("https://example.com/health")),
+    {
+      middleware: [
+        (req, ctx, next) => {
+          // intercept and return something different
+          return new Response("intercepted")
+        },
+      ],
+    }
+  )
+  t.is(response.status, 200)
+  t.is(await response.text(), "intercepted")
+})
+
 test.serial("can make request when hosted on subpath", async (t) => {
   const bundle = await createAndLoadBundle(t)
 
