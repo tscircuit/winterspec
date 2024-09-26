@@ -275,7 +275,10 @@ export const withInputValidation =
       try {
         jsonBody = await req.clone().json()
       } catch (e: any) {
-        if (!input.jsonBody?.isOptional()) {
+        if (
+          !input.jsonBody?.isOptional() &&
+          !input.commonParams?.isOptional()
+        ) {
           throw new InputParsingError("Error while parsing JSON body")
         }
       }
