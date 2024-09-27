@@ -1,5 +1,6 @@
 import { Command, Option } from "clipanion"
-import path, { relative } from "node:path/posix"
+import path, { relative } from "node:path"
+import { join } from "node:path/posix"
 import fs from "fs/promises"
 import { createRoutePathMapFromDirectory } from "../../routes/create-route-map-from-directory.js"
 import { WinterSpecRouteMap } from "../../types/winter-spec.js"
@@ -47,7 +48,7 @@ const routeMap = {
   ${Object.entries(routeMap)
     .map(
       ([route, { relativePath }]) =>
-        `"${route}": (await import('./${path.join(
+        `"${route}": (await import('./${join(
           relativeOutputDir,
           this.routesDirectory,
           relativePath
