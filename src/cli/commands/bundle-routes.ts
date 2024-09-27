@@ -1,5 +1,5 @@
 import { Command, Option } from "clipanion"
-import path, { relative } from "path"
+import path, { relative } from "node:path/posix"
 import fs from "fs/promises"
 import { createRoutePathMapFromDirectory } from "../../routes/create-route-map-from-directory.js"
 import { WinterSpecRouteMap } from "../../types/winter-spec.js"
