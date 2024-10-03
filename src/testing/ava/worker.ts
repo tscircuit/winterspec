@@ -11,10 +11,12 @@ export class Worker {
   >
 
   constructor(private initialData: InitialWorkerData) {
+    console.log("worker constructed")
     this.startBundlerPromise = this.startBundler()
   }
 
   public async handleTestWorker(testWorker: SharedWorker.TestWorker) {
+    console.log("handleTestWorker")
     let workerRpcCallback: (data: any) => void
     const channel: ChannelOptions = {
       post: (data) => testWorker.publish(data),

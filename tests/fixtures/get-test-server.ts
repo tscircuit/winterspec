@@ -19,16 +19,10 @@ export const getTestServer = async (
     middleware?: Middleware[]
   }
 ) => {
-  const routesDirectory = path.join(
-    path.dirname(fileURLToPath(testFileUrl)),
-    "api"
-  )
+  const rootDirectory = path.join(path.dirname(fileURLToPath(testFileUrl)))
 
   const { stop, port } = await startDevServer({
-    rootDirectory: path.join(routesDirectory, ".."),
-    config: {
-      routesDirectory,
-    },
+    rootDirectory,
     port: await getPort(),
     middleware: options?.middleware,
     onBuildEnd(build) {

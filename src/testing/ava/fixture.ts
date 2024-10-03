@@ -51,7 +51,7 @@ export type GetTestServerOptions = {
 
 /**
  * Start a test dev server for AVA. This works in watch mode too!
- * Check out the [docs](https://github.com/seamapi/winterspec/blob/main/docs/testing.md) for more information.
+ * Check out the [docs](https://github.com/tscircuit/winterspec/blob/main/docs/testing.md) for more information.
  *
  * @param t test context from AVA
  */

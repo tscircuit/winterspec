@@ -58,4 +58,4 @@ WinterSpec may not be the right choice for your project. This list is not exhaus
 
 ## Acknowledgements
 
-- [originally a fork of winterspec from Seam](https://github.com/seamapi/winterspec)
+- [originally a fork of winterspec from Seam](https://github.com/tscircuit/winterspec)

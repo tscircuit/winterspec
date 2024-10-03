@@ -19,7 +19,7 @@ const winterSpecConfigSchema = z
      *
      * Defaults to `wintercg-minimal`, and you should use this whenever possible for maximal compatibility.
      *
-     * Check [the docs](https://github.com/seamapi/winterspec/blob/main/docs/winterspec-config.md) for more information.
+     * Check [the docs](https://github.com/tscircuit/winterspec/blob/main/docs/winterspec-config.md) for more information.
      */
     platform: z
       .enum(["node", "wintercg-minimal"])
