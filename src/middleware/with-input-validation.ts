@@ -234,7 +234,9 @@ export const withInputValidation =
     if (
       (req.method === "POST" || req.method === "PATCH") &&
       (input.jsonBody || input.commonParams) &&
-      !req.headers.get("content-type")?.includes("application/json")
+      !req.headers.get("content-type")?.includes("application/json") &&
+      !input.jsonBody?.isOptional() &&
+      !input.commonParams?.isOptional()
     ) {
       throw new InvalidContentTypeError(
         `${req.method} requests must have Content-Type header with "application/json"`
@@ -273,7 +275,10 @@ export const withInputValidation =
 
     let jsonBody: any
 
-    if (input.jsonBody || input.commonParams) {
+    if (
+      (input.jsonBody || input.commonParams) &&
+      req.headers.get("content-type")?.includes("application/json")
+    ) {
       try {
         jsonBody = await req.clone().json()
       } catch (e: any) {
@@ -301,7 +306,12 @@ export const withInputValidation =
 
     let urlEncodedFormData = undefined
 
-    if (input.urlEncodedFormData) {
+    if (
+      input.urlEncodedFormData &&
+      req.headers
+        .get("content-type")
+        ?.includes("application/x-www-form-urlencoded")
+    ) {
       try {
         const params = new URLSearchParams(await req.clone().text())
         urlEncodedFormData = Object.fromEntries(params.entries())
