@@ -20,9 +20,14 @@
       "types": "./dist/config/index.d.ts"
     },
     "./dev": {
-      "import": "./dist/dev/index.js",
-      "require": "./dist/dev/index.js",
-      "types": "./dist/dev/index.d.ts"
+      "import": "./dist/dev/dev.js",
+      "require": "./dist/dev/dev.js",
+      "types": "./dist/dev/dev.d.ts"
+    },
+    "./dev-server": {
+      "import": "./dist/dev/dev-server.js",
+      "require": "./dist/dev/dev-server.js",
+      "types": "./dist/dev/dev-server.d.ts"
     },
     "./middleware": {
       "import": "./dist/middleware/index.js",
