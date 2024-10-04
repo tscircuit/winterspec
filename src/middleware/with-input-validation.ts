@@ -243,6 +243,7 @@ export const withInputValidation =
 
     if (
       input.urlEncodedFormData &&
+      !input.urlEncodedFormData.isOptional() &&
       req.method !== "GET" &&
       !req.headers
         .get("content-type")
@@ -255,6 +256,7 @@ export const withInputValidation =
 
     if (
       input.formData &&
+      !input.formData.isOptional() &&
       (req.method === "POST" || req.method === "PATCH") &&
       !req.headers.get("content-type")?.includes("multipart/form-data")
     ) {
