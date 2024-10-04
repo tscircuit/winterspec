@@ -234,7 +234,9 @@ export const withInputValidation =
     if (
       (req.method === "POST" || req.method === "PATCH") &&
       (input.jsonBody || input.commonParams) &&
-      !req.headers.get("content-type")?.includes("application/json")
+      !req.headers.get("content-type")?.includes("application/json") &&
+      !input.jsonBody?.isOptional() &&
+      !input.commonParams?.isOptional()
     ) {
       throw new InvalidContentTypeError(
         `${req.method} requests must have Content-Type header with "application/json"`
