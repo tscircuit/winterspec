@@ -1,6 +1,6 @@
 {
   "name": "winterspec",
-  "version": "0.0.91",
+  "version": "0.0.92",
   "description": "Write Winter-CG compatible routes with filesystem routing and tons of features",
   "type": "module",
   "files": [
