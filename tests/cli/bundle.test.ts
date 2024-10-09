@@ -19,7 +19,7 @@ test("CLI bundle command produces a bundle", async (t) => {
   const tempPath = path.join(os.tmpdir(), `${randomUUID()}.js`)
   const appDirectoryPath = path.join(
     path.dirname(fileURLToPath(import.meta.url)),
-    "../smoke/api"
+    "../smoke/routes"
   )
   const execution = cli.executeCommand([
     "bundle",
