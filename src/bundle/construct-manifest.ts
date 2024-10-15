@@ -1,4 +1,4 @@
-import path from "node:path"
+import path from "node:path/posix"
 import { createRoutePathMapFromDirectory } from "src/routes/create-route-map-from-directory.js"
 
 const alphabet = "zyxwvutsrqponmlkjihgfedcba"

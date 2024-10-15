@@ -1,6 +1,6 @@
 import test from "ava"
 import { bundle } from "src/bundle/bundle.js"
-import path from "node:path"
+import path from "node:path/posix"
 import fs from "node:fs/promises"
 import { fileURLToPath } from "node:url"
 import { execa } from "execa"

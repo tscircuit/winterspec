@@ -1,4 +1,4 @@
-import path from "node:path"
+import path from "node:path/posix"
 import fs from "node:fs/promises"
 import { bundleRequire } from "bundle-require"
 import { WinterSpecConfig } from "src/config/config.js"

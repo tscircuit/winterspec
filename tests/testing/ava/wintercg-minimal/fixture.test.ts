@@ -1,6 +1,6 @@
 import test from "ava"
 import { fileURLToPath } from "node:url"
-import path from "node:path"
+import path from "node:path/posix"
 import { getTestServer } from "src/testing/ava/fixture.js"
 import { Middleware } from "src/middleware/index.js"
 

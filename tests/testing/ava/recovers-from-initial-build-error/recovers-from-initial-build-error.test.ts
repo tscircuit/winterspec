@@ -1,6 +1,6 @@
 import test from "ava"
 import { fileURLToPath } from "node:url"
-import path from "node:path"
+import path from "node:path/posix"
 import { execa } from "execa"
 import { PassThrough, Writable } from "node:stream"
 import fs from "node:fs/promises"
