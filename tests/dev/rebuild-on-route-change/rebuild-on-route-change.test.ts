@@ -1,6 +1,6 @@
 import test from "ava"
 import fs from "node:fs/promises"
-import path from "node:path"
+import path from "node:path/posix"
 import { fileURLToPath } from "node:url"
 import { getTestServer } from "tests/fixtures/get-test-server.js"
 import pRetry from "p-retry"

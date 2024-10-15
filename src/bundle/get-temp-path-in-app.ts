@@ -1,4 +1,4 @@
-import path from "node:path"
+import path from "node:path/posix"
 import fs from "node:fs/promises"
 
 export const getTempPathInApp = async (rootDirectory: string) => {

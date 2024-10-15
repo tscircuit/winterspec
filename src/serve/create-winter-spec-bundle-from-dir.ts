@@ -5,7 +5,7 @@ import {
 } from "src/types/winter-spec.js"
 import { createWinterSpecFromRouteMap } from "./create-node-server-from-route-map.js"
 import { WinterSpecConfig } from "src/config/config.js"
-import { join } from "node:path"
+import { join } from "node:path/posix"
 
 export const createWinterSpecBundleFromDir = async (
   dirPath: string,

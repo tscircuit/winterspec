@@ -1,6 +1,6 @@
 import getPort from "@ava/get-port"
 import test from "ava"
-import path from "node:path"
+import path from "node:path/posix"
 import { fileURLToPath } from "node:url"
 import pRetry from "p-retry"
 import { getTestCLI } from "tests/fixtures/get-test-cli.js"

@@ -1,14 +1,14 @@
 import { Command, Option } from "clipanion"
 import { bundle } from "src/bundle/bundle.js"
 import fs, { readFile } from "node:fs/promises"
-import path from "node:path"
+import path from "node:path/posix"
 import { durationFormatter, sizeFormatter } from "human-readable"
 import ora from "ora"
 import { BaseCommand } from "../base-command.js"
 import { ResolvedWinterSpecConfig } from "src/config/utils.js"
 
 import { BundleOptions } from "src/bundle/types.js"
-import { join as joinPath } from "node:path"
+import { join as joinPath } from "node:path/posix"
 
 export class BundleCommand extends BaseCommand {
   static paths = [[`bundle`]]

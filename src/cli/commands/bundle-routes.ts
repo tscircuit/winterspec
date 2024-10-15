@@ -1,5 +1,5 @@
 import { Command, Option } from "clipanion"
-import path, { relative } from "node:path"
+import path, { relative } from "node:path/posix"
 import { join } from "node:path/posix"
 import fs from "fs/promises"
 import { createRoutePathMapFromDirectory } from "../../routes/create-route-map-from-directory.js"

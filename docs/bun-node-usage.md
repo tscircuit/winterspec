@@ -36,7 +36,7 @@ server. Here's an example of how you might do that in bun:
 import { startServerFromRoutesDir } from "winterspec/adapters/node"
 import { afterEach, beforeEach } from "bun:test"
 import defaultAxios from "redaxios"
-import path from "path"
+import path from "node:path/posix"
 
 interface TestFixture {
   url: string

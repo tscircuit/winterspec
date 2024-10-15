@@ -1,7 +1,7 @@
 import test, { ExecutionContext } from "ava"
 import { getTestCLI } from "tests/fixtures/get-test-cli.js"
 import os from "node:os"
-import path from "node:path"
+import path from "node:path/posix"
 import { randomUUID } from "node:crypto"
 import { fileURLToPath } from "node:url"
 import fs from "node:fs/promises"

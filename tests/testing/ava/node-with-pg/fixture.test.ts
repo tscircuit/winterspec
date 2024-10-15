@@ -1,6 +1,6 @@
 import test from "ava"
 import { fileURLToPath } from "node:url"
-import path from "node:path"
+import path from "node:path/posix"
 import { getTestServer } from "src/testing/ava/fixture.js"
 
 test("pg can be used inside of winterspec", async (t) => {

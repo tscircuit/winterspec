@@ -1,5 +1,5 @@
 import { ExecutionContext } from "ava"
-import path from "node:path"
+import path from "node:path/posix"
 import defaultAxios from "axios"
 import { fileURLToPath } from "node:url"
 import getPort from "@ava/get-port"

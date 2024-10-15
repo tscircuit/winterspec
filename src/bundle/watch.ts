@@ -1,7 +1,7 @@
 import Watcher from "watcher"
 import * as esbuild from "esbuild"
 import fs from "node:fs/promises"
-import path from "node:path"
+import path from "node:path/posix"
 import { constructManifest } from "./construct-manifest.js"
 import { BundleOptions } from "./types.js"
 import { getTempPathInApp } from "./get-temp-path-in-app.js"
