@@ -39,7 +39,8 @@ ${routes
         path.join(options.routesDirectory, relativePath)
       )}"`
   )
-  .join("\n")}
+  .join("\n")
+  .replace(/\\/g, "/")}
 
 const routeMapWithHandlers = {
   ${routes.map(({ id, route }) => `"${route}": ${id}.default`).join(",")}
