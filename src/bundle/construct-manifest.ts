@@ -28,7 +28,8 @@ export const constructManifest = async (options: ConstructManifestOptions) => {
     }
   })
 
-  return `
+  return (
+    `
 import {getRouteMatcher} from "next-route-matcher"
 import { makeRequestAgainstWinterSpec } from "winterspec"
 
@@ -62,4 +63,5 @@ addFetchListener(winterSpec)
     : "export default winterSpec"
 }
   `.trim()
+  )
 }
