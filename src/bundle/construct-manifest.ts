@@ -39,7 +39,9 @@ ${routes
         path.join(options.routesDirectory, relativePath)
       )}"`
   )
-  .join("\n")}
+  .join("\n")
+  // pathfix for windows (esbuild always uses windows backslash paths)
+  .replace(/\\/g, "/")}
 
 const routeMapWithHandlers = {
   ${routes.map(({ id, route }) => `"${route}": ${id}.default`).join(",")}
