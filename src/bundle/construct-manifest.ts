@@ -33,15 +33,15 @@ import {getRouteMatcher} from "next-route-matcher"
 import { makeRequestAgainstWinterSpec } from "winterspec"
 
 ${routes
-      .map(
-        ({ id, relativePath }) =>
-          `import * as ${id} from "${path.resolve(
-            path.join(options.routesDirectory, relativePath)
-          )}"`
-      )
-      .join("\n")
-      // pathfix for windows (esbuild always uses Unix-based forward slash for paths)
-      .replace(/\\/g, "/")}
+  .map(
+    ({ id, relativePath }) =>
+      `import * as ${id} from "${path.resolve(
+        path.join(options.routesDirectory, relativePath)
+      )}"`
+  )
+  .join("\n")
+  // pathfix for windows (esbuild always uses Unix-based forward slash for paths)
+  .replace(/\\/g, "/")}
 
 const routeMapWithHandlers = {
   ${routes.map(({ id, route }) => `"${route}": ${id}.default`).join(",")}
@@ -53,12 +53,13 @@ const winterSpec = {
   makeRequest: async (req, options) => makeRequestAgainstWinterSpec(winterSpec, options)(req)
 }
 
-${options.bundledAdapter === "wintercg-minimal"
-      ? `
+${
+  options.bundledAdapter === "wintercg-minimal"
+    ? `
 import {addFetchListener} from "winterspec/adapters/wintercg-minimal"
 addFetchListener(winterSpec)
 `
-      : "export default winterSpec"
-    }
+    : "export default winterSpec"
+}
   `.trim()
 }
