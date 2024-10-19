@@ -40,6 +40,7 @@ ${routes
       )}"`
   )
   .join("\n")
+  // pathfix for windows (esbuild always uses windows backslash paths)
   .replace(/\\/g, "/")}
 
 const routeMapWithHandlers = {
