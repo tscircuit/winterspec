@@ -1,4 +1,4 @@
-import path from "node:path"
+import path from "node:path/posix"
 import hash from "object-hash"
 import getPort from "@ava/get-port"
 import { registerSharedWorker } from "ava/plugin"

@@ -1,4 +1,4 @@
-import path from "path"
+import path from "node:path/posix"
 import { getTempPathInApp } from "src/bundle/get-temp-path-in-app.js"
 import { bundleAndWatch } from "src/bundle/watch.js"
 import { ResolvedWinterSpecConfig } from "src/config/utils.js"
