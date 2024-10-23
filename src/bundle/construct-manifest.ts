@@ -28,7 +28,8 @@ export const constructManifest = async (options: ConstructManifestOptions) => {
     }
   })
 
-  return `
+  return (
+    `
 import {getRouteMatcher} from "next-route-matcher"
 import { makeRequestAgainstWinterSpec } from "winterspec"
 
@@ -40,6 +41,7 @@ ${routes
       )}"`
   )
   .join("\n")
+  // pathfix for windows (esbuild always uses Unix-based forward slash for paths)
   .replace(/\\/g, "/")}
 
 const routeMapWithHandlers = {
@@ -61,4 +63,5 @@ addFetchListener(winterSpec)
     : "export default winterSpec"
 }
   `.trim()
+  )
 }
