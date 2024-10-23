@@ -3,7 +3,7 @@ import { getTestCLI } from "tests/fixtures/get-test-cli.js"
 import os from "node:os"
 import path from "node:path"
 import { randomUUID } from "node:crypto"
-import { fileURLToPath } from "node:url"
+import { fileURLToPath, pathToFileURL } from "node:url"
 
 test("CLI bundle command requires an output path", async (t) => {
   const cli = await getTestCLI(t)
@@ -31,6 +31,6 @@ test("CLI bundle command produces a bundle", async (t) => {
   const result = await execution.waitUntilExit()
   t.is(result.exitCode, 0)
 
-  const bundle = await import(tempPath)
+  const bundle = await import(pathToFileURL(tempPath).href)
   t.truthy(bundle.default.routeMapWithHandlers)
 })

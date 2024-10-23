@@ -3,7 +3,7 @@ import { getTestCLI } from "tests/fixtures/get-test-cli.js"
 import os from "node:os"
 import path from "node:path"
 import { randomUUID } from "node:crypto"
-import { fileURLToPath } from "node:url"
+import { fileURLToPath, pathToFileURL } from "node:url"
 import { loadBundle } from "src/helpers.js"
 
 const createAndLoadBundle = async (t: ExecutionContext) => {
@@ -24,7 +24,7 @@ const createAndLoadBundle = async (t: ExecutionContext) => {
   const result = await execution.waitUntilExit()
   t.is(result.exitCode, 0)
 
-  return loadBundle(tempPath)
+  return loadBundle(pathToFileURL(tempPath).href)
 }
 
 test.serial("simple request works", async (t) => {

@@ -16,6 +16,7 @@ import { loadBundle } from "src/helpers.js"
 import { generateSchema } from "@anatine/zod-openapi"
 import { ZodObject, ZodTypeAny } from "zod"
 import camelcase from "camelcase"
+import { pathToFileURL } from "node:url"
 
 const replaceFirstCharToLowercase = (str: string) => {
   if (str.length === 0) {
@@ -66,7 +67,7 @@ export class CodeGenOpenAPI extends BaseCommand {
   async run(config: ResolvedWinterSpecConfig) {
     const tempBundlePath = path.join(os.tmpdir(), `${randomUUID()}.mjs`)
     await fs.writeFile(tempBundlePath, await bundle(config))
-    const runtimeBundle = await loadBundle(tempBundlePath)
+    const runtimeBundle = await loadBundle(pathToFileURL(tempBundlePath).href)
 
     const globalRouteSpec = Object.values(
       runtimeBundle.routeMapWithHandlers

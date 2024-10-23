@@ -1,5 +1,6 @@
 import { SharedWorker } from "ava/plugin"
 import { Worker } from "./worker.js"
+import { fileURLToPath } from "node:url"
 
 const needsToNegotiateProtocol = (
   arg: SharedWorker.FactoryOptions | SharedWorker.Protocol
@@ -18,9 +19,12 @@ const workerWrapper = async (
 
   const { initialData } = protocol
 
-  const worker = new Worker(initialData as any)
-
   for await (const testWorker of protocol.testWorkers()) {
+    const route = fileURLToPath(testWorker.file)
+      .split("\\")
+      .slice(0, -1)
+      .join("\\")
+    const worker = new Worker({ rootDirectory: route } as any)
     void worker.handleTestWorker(testWorker as any)
   }
 }

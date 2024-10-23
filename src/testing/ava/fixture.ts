@@ -15,23 +15,22 @@ const getWorker = async (initialData: InitialWorkerData) => {
   const key = hash(initialData)
 
   const dirname = path.dirname(fileURLToPath(import.meta.url))
+  const filename = new URL(
+    `file:${path.resolve(dirname, "worker-wrapper.ts")}#${key}`
+  )
 
   if (process.env.IS_TESTING_EDGESPEC) {
     const { registerSharedTypeScriptWorker } = await import(
       "ava-typescript-worker"
     )
     return registerSharedTypeScriptWorker({
-      filename: new URL(
-        `file:${path.resolve(dirname, "worker-wrapper.ts")}#${key}`
-      ),
+      filename: { ...filename, pathname: filename.pathname.replace("/", "") },
       initialData: initialData as any,
     })
   }
 
   return registerSharedWorker({
-    filename: new URL(
-      `file:${path.resolve(dirname, "worker-wrapper.js")}#${key}`
-    ),
+    filename,
     initialData: initialData as any,
     supportedProtocols: ["ava-4"],
   })

@@ -55,6 +55,11 @@ test("if build is initially broken, it recovers (when in watch mode)", async (t)
 
   t.teardown(async () => {
     outputStream.end()
+
+    // In Windows process.kill() doesn't automatically destroy it's streams
+    child.stderr?.destroy()
+    child.stdout?.destroy()
+    child.stdin?.destroy()
     child.kill()
     // Throws because we kill above
     await child.catch(() => {})
