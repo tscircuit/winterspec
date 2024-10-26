@@ -17,14 +17,23 @@ const workerWrapper = async (
     ? arg.negotiateProtocol(["ava-4"]).ready()
     : arg
 
-  const { initialData } = protocol
+  // Old implementation:
+  // const { initialData } = protocol
+  // const worker = new Worker(initialData as any);
+
+  const getDirectoryFromPath = (filePath: string) => {
+    if (filePath.includes("/"))
+      return filePath.split("/").slice(0, -1).join("/")
+    return filePath.split("\\").slice(0, -1).join("\\")
+  }
 
   for await (const testWorker of protocol.testWorkers()) {
-    const route = fileURLToPath(testWorker.file)
-      .split("\\")
-      .slice(0, -1)
-      .join("\\")
-    const worker = new Worker({ rootDirectory: route } as any)
+    const testFileDirectory = getDirectoryFromPath(
+      fileURLToPath(testWorker.file)
+    )
+
+    const worker = new Worker({ rootDirectory: testFileDirectory } as any)
+
     void worker.handleTestWorker(testWorker as any)
   }
 }

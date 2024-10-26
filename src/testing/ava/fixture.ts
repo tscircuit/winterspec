@@ -23,8 +23,14 @@ const getWorker = async (initialData: InitialWorkerData) => {
     const { registerSharedTypeScriptWorker } = await import(
       "ava-typescript-worker"
     )
+
+    const normalizedCrossPlatformFilePath =
+      process.platform === "win32"
+        ? { ...filename, pathname: filename.pathname.replace("/", "") }
+        : filename
+
     return registerSharedTypeScriptWorker({
-      filename: { ...filename, pathname: filename.pathname.replace("/", "") },
+      filename: normalizedCrossPlatformFilePath,
       initialData: initialData as any,
     })
   }
