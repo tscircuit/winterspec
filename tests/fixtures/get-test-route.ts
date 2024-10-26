@@ -68,7 +68,7 @@ export const getTestRoute = async <
       [opts.routePath]: wrappedRouteFn,
     },
     {
-      defaultOrigin: `http://localhost:${port}`,
+      defaultOrigin: `http://127.0.0.1:${port}`,
     },
     opts.winterSpecOptions
   )
@@ -79,7 +79,7 @@ export const getTestRoute = async <
     app.close()
     return closePromise
   })
-  const serverUrl = `http://localhost:${port}`
+  const serverUrl = `http://127.0.0.1:${port}`
 
   return {
     serverUrl,
