@@ -1,7 +1,7 @@
 import test, { ExecutionContext } from "ava"
 import { getTestCLI } from "tests/fixtures/get-test-cli.js"
 import path from "node:path"
-import { fileURLToPath } from "node:url"
+import { fileURLToPath, pathToFileURL } from "node:url"
 import { loadBundle } from "src/helpers.js"
 import fs from "node:fs/promises"
 
@@ -58,7 +58,7 @@ const createAndLoadParentBundle = async (t: ExecutionContext) => {
   const result = await execution.waitUntilExit()
   t.is(result.exitCode, 0)
 
-  return loadBundle(bundlePath)
+  return loadBundle(pathToFileURL(bundlePath).href)
 }
 
 test.serial("automatically detects and removes base path", async (t) => {
