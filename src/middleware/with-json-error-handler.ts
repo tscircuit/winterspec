@@ -1,4 +1,4 @@
-import { Middleware } from "./types"
+import { Middleware } from "./types.js"
 import kleur from "kleur"
 
 export const withJsonErrorHandler: Middleware<{}, {}> = async (
