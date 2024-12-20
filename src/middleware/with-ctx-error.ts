@@ -1,4 +1,4 @@
-import { Middleware } from "./types"
+import { Middleware } from "./types.js"
 
 export const withCtxError: Middleware<
   {},

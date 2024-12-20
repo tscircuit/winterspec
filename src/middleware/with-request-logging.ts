@@ -2,9 +2,6 @@ import { Middleware } from "./types.js"
 import kleur from "kleur"
 import { Logger } from "./with-logger.js"
 
-// ENABLE COLORS ALWAYS
-kleur.enabled = true
-
 const colorStatus = (status: number) => {
   if (status >= 500) {
     return kleur.red(status.toString())
@@ -21,6 +18,9 @@ export const withRequestLogging: Middleware<
     logger: Logger
   }
 > = async (req, ctx, next) => {
+  // ENABLE COLORS ALWAYS
+  kleur.enabled = true
+  
   if (!ctx.logger) {
     ctx.logger = {
       error: (...args: any[]) => console.error(...args),
