@@ -20,7 +20,7 @@ export const withRequestLogging: Middleware<
 > = async (req, ctx, next) => {
   // ENABLE COLORS ALWAYS
   kleur.enabled = true
-  
+
   if (!ctx.logger) {
     ctx.logger = {
       error: (...args: any[]) => console.error(...args),
