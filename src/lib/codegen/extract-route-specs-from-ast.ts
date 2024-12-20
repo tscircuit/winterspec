@@ -8,6 +8,9 @@ import {
   TypeFormatFlags,
   ts,
 } from "ts-morph"
+import Debug from "debug"
+
+const debug = Debug("winterspec:extractRouteSpecsFromAST")
 
 const getZodTypeOfSymbol = (project: Project, symbol: Symbol | undefined) => {
   if (!symbol) return undefined
@@ -38,6 +41,7 @@ export const extractRouteSpecsFromAST = async ({
   tsConfigFilePath,
   routesDirectory,
 }: ExtractRouteSpecsFromASTOptions) => {
+  debug("Creating project...")
   const project = new Project({
     compilerOptions: {
       declaration: true,
@@ -47,6 +51,7 @@ export const extractRouteSpecsFromAST = async ({
     tsConfigFilePath,
   })
 
+  debug("Getting diagnostics...")
   const diagnostics = project.getPreEmitDiagnostics()
   if (diagnostics.length > 0) {
     console.error(project.formatDiagnosticsWithColorAndContext(diagnostics))
@@ -55,6 +60,7 @@ export const extractRouteSpecsFromAST = async ({
 
   let firstValidRouteDefaultExport: ExportedDeclarations
 
+  debug("Creating route map...")
   const routeMap = await createRoutePathMapFromDirectory(routesDirectory)
   const routes = Object.entries(routeMap).map(([route, { relativePath }]) => {
     const source = project.getSourceFileOrThrow(

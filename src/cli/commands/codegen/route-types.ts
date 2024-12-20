@@ -3,6 +3,9 @@ import fs from "node:fs/promises"
 import { BaseCommand } from "src/cli/base-command.js"
 import { ResolvedWinterSpecConfig } from "src/config/utils.js"
 import { extractRouteSpecsFromAST } from "src/lib/codegen/extract-route-specs-from-ast.js"
+import Debug from "debug"
+
+const debug = Debug("winterspec:CodeGenRouteTypes")
 
 export class CodeGenRouteTypes extends BaseCommand {
   static paths = [[`codegen`, `route-types`]]
@@ -13,6 +16,7 @@ export class CodeGenRouteTypes extends BaseCommand {
   })
 
   async run(config: ResolvedWinterSpecConfig) {
+    debug("Running with config", config)
     const { project, routes, renderType } = await extractRouteSpecsFromAST({
       tsConfigFilePath: config.tsconfigPath,
       routesDirectory: config.routesDirectory,

@@ -5,3 +5,4 @@ bundled.*
 .winterspec
 .vscode
 .aider*
+.env
