@@ -4,7 +4,7 @@ name: Check
 on:
   push:
     branches:
-      - "**"
+      - "*"
 
 jobs:
   test:
