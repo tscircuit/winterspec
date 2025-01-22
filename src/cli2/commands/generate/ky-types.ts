@@ -69,7 +69,7 @@ export interface ApiRoutes {
 
         // Write the generated types to file
         await fs.writeFile(options.output ?? "ky-types.ts", kyTypesContent2)
-        debug("Generated ky-types at", options.output ?? "ky-types.ts")
+        debug("Generated ky-types at ", options.output ?? "ky-types.ts")
       })
   }
 }
