@@ -18,7 +18,7 @@ export const getTestCLI = async (t: ExecutionContext) => {
 
       const command = execa(
         "node",
-        ["--import=tsx", "src/cli/cli.ts", ...args],
+        ["--import=tsx", "src/cli2/cli.ts", ...args],
         {
           reject: false,
         }
