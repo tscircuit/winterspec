@@ -53,13 +53,14 @@ export interface ApiRoutes {
             parts.push(`responseJson: ${renderType(jsonResponseZodOutputType)}`)
           }
 
-          methodDef += parts.join(",\n      ") + "\n    }"
+          methodDef +=
+            parts.length > 0 ? parts.join(",\n      ") + "\n    }" : "{}"
           return methodDef
         })
 
         return `"${route}": {
     ${methods.join(",\n    ")}
-        }`
+  }`
       }
     )
     .join(",\n  ")}
