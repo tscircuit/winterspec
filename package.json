@@ -104,7 +104,9 @@
     "tsx": "^4.7.0",
     "type-fest": "^4.10.0",
     "typed-emitter": "^2.1.0",
-    "typescript": "^5.3.3"
+    "typed-ky": "^0.0.4",
+    "typescript": "^5.3.3",
+    "winterspec": "^0.0.99"
   },
   "dependencies": {
     "@anatine/zod-openapi": "^2.2.3",

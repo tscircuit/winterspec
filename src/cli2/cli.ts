@@ -4,6 +4,7 @@ import { BundleCommand } from "./commands/bundle.js"
 import { DevCommand } from "./commands/dev.js"
 import { CodeGenRouteTypes } from "./commands/codegen/route-types.js"
 import { CodeGenOpenAPI } from "./commands/codegen/openapi.js"
+import { CodeGenKyTypes } from "./commands/generate/ky-types.js"
 import { BundleRoutesCommand } from "./commands/bundle-routes.js"
 import Debug from "debug"
 
@@ -22,6 +23,7 @@ const commands = [
   new CodeGenRouteTypes(program),
   new CodeGenOpenAPI(program),
   new BundleRoutesCommand(program),
+  new CodeGenKyTypes(program),
 ]
 
 commands.forEach((cmd) => cmd.register())
