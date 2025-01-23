@@ -44,7 +44,7 @@ export const getTestCLI = async (t: ExecutionContext) => {
 export const getTestCLI2 = async (t: ExecutionContext) => {
   return {
     executeCommand: (args: string[]) => {
-      t.log(`Executing CLI command: winterspec ${args.join(" ")}`)
+      t.log(`Executing CLI command: winterspec2 ${args.join(" ")}`)
 
       const logStream = new Writable({
         write(chunk, _, done) {
