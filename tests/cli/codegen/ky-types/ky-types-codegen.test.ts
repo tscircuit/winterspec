@@ -8,7 +8,7 @@ import fs from "node:fs/promises"
 import { Project } from "ts-morph"
 
 test("CLI codegen ky-types command produces the expected ky types", async (t) => {
-  const cli = await getTestCLI(t)
+  const cli = await getTestCLI(t, 2)
 
   const testFileDirectory = path.dirname(fileURLToPath(import.meta.url))
 

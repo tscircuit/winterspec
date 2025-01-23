@@ -2,7 +2,7 @@ import { ExecutionContext } from "ava"
 import { execa } from "execa"
 import { Writable } from "node:stream"
 
-export const getTestCLI = async (t: ExecutionContext) => {
+export const getTestCLI = async (t: ExecutionContext, cliVersion?: number) => {
   return {
     executeCommand: (args: string[]) => {
       t.log(`Executing CLI command: winterspec ${args.join(" ")}`)
@@ -18,7 +18,7 @@ export const getTestCLI = async (t: ExecutionContext) => {
 
       const command = execa(
         "node",
-        ["--import=tsx", "src/cli/cli.ts", ...args],
+        ["--import=tsx", `src/cli${cliVersion ?? ""}/cli.ts`, ...args],
         {
           reject: false,
         }
