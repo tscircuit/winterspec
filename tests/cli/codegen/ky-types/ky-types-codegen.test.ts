@@ -1,5 +1,5 @@
 import test from "ava"
-import { getTestCLI } from "tests/fixtures/get-test-cli.js"
+import { getTestCLI2 } from "tests/fixtures/get-test-cli.js"
 import os from "node:os"
 import path from "node:path"
 import { randomUUID } from "node:crypto"
@@ -8,7 +8,7 @@ import fs from "node:fs/promises"
 import { Project } from "ts-morph"
 
 test("CLI codegen ky-types command produces the expected ky types", async (t) => {
-  const cli = await getTestCLI(t, 2)
+  const cli = await getTestCLI2(t)
 
   const testFileDirectory = path.dirname(fileURLToPath(import.meta.url))
 
