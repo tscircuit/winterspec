@@ -160,8 +160,18 @@ export async function wrapMiddlewares(
         return middleware(req, ctx, next as any)
       }
     },
-    async (request: WinterSpecRequest, ctx: ResponseTypeToContext<Response>) =>
-      routeFn(request, ctx)
+    async (
+      request: WinterSpecRequest,
+      ctx: ResponseTypeToContext<Response>
+    ) => {
+      const result = await routeFn(request, ctx)
+      if (typeof result === "object" && !(result instanceof Response)) {
+        throw new Error(
+          "Return value must be a Response. Use ctx.json({...}) instead of returning an object directly."
+        )
+      }
+      return result
+    }
   )(request, ctx)
 }
 
