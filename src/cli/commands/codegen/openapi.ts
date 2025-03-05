@@ -185,15 +185,16 @@ export class CodeGenOpenAPI extends BaseCommand {
 
         if (_routeSpec.jsonResponse) {
           // todo: responses other than 200
-          operation.responses = operation.responses || {};
-          operation.responses[200] = operation.responses[200] || { description: "OK" };
+          operation.responses = operation.responses || {}
+          operation.responses[200] = operation.responses[200] || {
+            description: "OK",
+          }
           operation.responses[200].content = {
             "application/json": {
               schema: generateSchema(_routeSpec.jsonResponse),
             },
           }
         }
-
 
         pathItemObject[method.toLowerCase() as keyof PathItemObject] = {
           ...operation,
