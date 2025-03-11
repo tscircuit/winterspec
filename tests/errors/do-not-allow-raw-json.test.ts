@@ -9,21 +9,20 @@ test("sending an invalid response logs a verbose error when using default except
       beforeAuthMiddleware: [],
     },
     routeSpec: {
-      methods: ["POST"],
+      methods: ["GET"],
       jsonBody: z.any(),
       jsonResponse: z.any(),
     },
-    routePath: "/echo",
+    routePath: "/",
     routeFn: (req, ctx) => {
-      return req.jsonBody
+      return { foo: "bar" } as any
     },
   })
 
-  const { status } = await axios.post(
-    "/echo",
-    { foo: "boo" },
-    { validateStatus: () => true }
-  )
+  const { status } = await axios.get("/", {
+    validateStatus: () => true,
+    timeout: 1000,
+  })
   t.is(status, 500)
   const logs = getLogs()
   t.true(
