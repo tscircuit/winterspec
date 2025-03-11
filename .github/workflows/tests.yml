@@ -29,5 +29,8 @@ jobs:
       - name: Build Code
         run: bun run build
 
+      - name: Build Code
+        run: bun run typecheck
+
       - name: Run tests
         run: bunx ava  --timeout=2m
