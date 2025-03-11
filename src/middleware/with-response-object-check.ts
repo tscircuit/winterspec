@@ -2,7 +2,7 @@ import { ResponseValidationError } from "./http-exceptions.js"
 import { Middleware } from "./types.js"
 import { RouteSpec } from "src/types/route-spec.js"
 
-export const withResponseValidation: Middleware<
+export const withResponseObjectCheck: Middleware<
   { routeSpec: RouteSpec<any> },
   {}
 > = async (req, ctx, next) => {
