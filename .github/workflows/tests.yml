@@ -26,11 +26,11 @@ jobs:
       - name: Run linter
         run: bun lint
 
-      - name: Build Code
-        run: bun run build
+      - name: Type Check Code
+        run: bun run typecheck
 
       - name: Build Code
-        run: bun run typecheck
+        run: bun run build
 
       - name: Run tests
         run: bunx ava  --timeout=2m
