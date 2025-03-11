@@ -1,13 +1,12 @@
 import test from "ava"
 import { z } from "zod"
 import { getTestRoute } from "tests/fixtures/get-test-route.js"
-import { createWithDefaultExceptionHandling } from "src/middleware/with-default-exception-handling.js"
 
-test("should throw an error when responding with raw JSON", async (t) => {
+test("sending an invalid response logs a verbose error when using default exception middleware", async (t) => {
   const { axios, getLogs } = await getTestRoute(t, {
     globalSpec: {
-      beforeAuthMiddleware: [createWithDefaultExceptionHandling()],
       authMiddleware: {},
+      beforeAuthMiddleware: [],
     },
     routeSpec: {
       methods: ["POST"],
@@ -16,7 +15,7 @@ test("should throw an error when responding with raw JSON", async (t) => {
     },
     routePath: "/echo",
     routeFn: (req, ctx) => {
-      return ctx.json(req.jsonBody)
+      return req.jsonBody
     },
   })
 
@@ -26,12 +25,9 @@ test("should throw an error when responding with raw JSON", async (t) => {
     { validateStatus: () => true }
   )
   t.is(status, 500)
-
   const logs = getLogs()
-  const loggedError = logs.error.find((log) => Boolean(log[0]))?.[0]
-  t.truthy(loggedError)
   t.true(
-    loggedError.includes(
+    logs.error[0][0].message.includes(
       "Use ctx.json({...}) instead of returning an object directly"
     )
   )

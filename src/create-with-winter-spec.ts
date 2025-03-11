@@ -17,6 +17,7 @@ import { withMethods } from "./middleware/with-methods.js"
 import { withInputValidation } from "./middleware/with-input-validation.js"
 import { withUnhandledExceptionHandling } from "./middleware/with-unhandled-exception-handling.js"
 import { ResponseValidationError } from "./middleware/http-exceptions.js"
+import { withResponseValidation } from "./middleware/with-response-validation.js"
 
 const attachMetadataToRouteFn = <
   const GS extends GlobalSpec,
@@ -65,6 +66,7 @@ export const createWithWinterSpec = <const GS extends GlobalSpec>(
                 _injectedWinterSpecMiddleware
               : []),
             withUnhandledExceptionHandling,
+            withResponseValidation,
             // this serializes responses that are returned by middleware WITHOUT
             // validating them against the routeSpec
             //
@@ -160,18 +162,8 @@ export async function wrapMiddlewares(
         return middleware(req, ctx, next as any)
       }
     },
-    async (
-      request: WinterSpecRequest,
-      ctx: ResponseTypeToContext<Response>
-    ) => {
-      const result = await routeFn(request, ctx)
-      if (typeof result === "object" && !(result instanceof Response)) {
-        throw new Error(
-          "Use ctx.json({...}) instead of returning an object directly."
-        )
-      }
-      return result
-    }
+    async (request: WinterSpecRequest, ctx: ResponseTypeToContext<Response>) =>
+      routeFn(request, ctx)
   )(request, ctx)
 }
 
