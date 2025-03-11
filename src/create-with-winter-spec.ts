@@ -165,7 +165,6 @@ export async function wrapMiddlewares(
       ctx: ResponseTypeToContext<Response>
     ) => {
       const result = await routeFn(request, ctx)
-      console.log("result")
       if (typeof result === "object" && !(result instanceof Response)) {
         throw new Error(
           "Use ctx.json({...}) instead of returning an object directly."
