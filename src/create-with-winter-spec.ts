@@ -66,7 +66,6 @@ export const createWithWinterSpec = <const GS extends GlobalSpec>(
                 _injectedWinterSpecMiddleware
               : []),
             withUnhandledExceptionHandling,
-            withResponseValidation,
             // this serializes responses that are returned by middleware WITHOUT
             // validating them against the routeSpec
             //
@@ -83,6 +82,7 @@ export const createWithWinterSpec = <const GS extends GlobalSpec>(
             ),
             ...(globalSpec.afterAuthMiddleware ?? []),
             ...(routeSpec.middleware ?? []),
+            withResponseValidation,
             withMethods(routeSpec.methods),
             withInputValidation({
               supportedArrayFormats: globalSpec.supportedArrayFormats ?? [

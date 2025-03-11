@@ -2,11 +2,20 @@ import test from "ava"
 import { z } from "zod"
 import { getTestRoute } from "tests/fixtures/get-test-route.js"
 
-test("sending an invalid response logs a verbose error when using default exception middleware", async (t) => {
-  const { axios, getLogs } = await getTestRoute(t, {
+test("should throw an error when responding with raw JSON", async (t) => {
+  const { axios } = await getTestRoute(t, {
     globalSpec: {
       authMiddleware: {},
-      beforeAuthMiddleware: [],
+      beforeAuthMiddleware: [
+        async (req, ctx, next) => {
+          try {
+            return await next(req, ctx)
+          } catch (e: any) {
+            console.log(e)
+            return Response.json({ error: e.message }, { status: 500 })
+          }
+        },
+      ],
     },
     routeSpec: {
       methods: ["GET"],
@@ -19,14 +28,11 @@ test("sending an invalid response logs a verbose error when using default except
     },
   })
 
-  const { status } = await axios.get("/", {
+  const { data } = await axios.get("/", {
     validateStatus: () => true,
-    timeout: 1000,
   })
-  t.is(status, 500)
-  const logs = getLogs()
   t.true(
-    logs.error[0][0].message.includes(
+    data.error.includes(
       "Use ctx.json({...}) instead of returning an object directly"
     )
   )
