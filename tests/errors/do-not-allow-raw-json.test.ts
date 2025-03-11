@@ -11,7 +11,7 @@ test("should throw an error when responding with raw JSON", async (t) => {
           try {
             return await next(req, ctx)
           } catch (e: any) {
-            console.log(e)
+            console.error(e)
             return Response.json({ error: e.message }, { status: 500 })
           }
         },
