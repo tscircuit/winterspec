@@ -111,7 +111,7 @@
     "@edge-runtime/node-utils": "^2.3.0",
     "@edge-runtime/primitives": "^4.1.0",
     "async-mutex": "^0.4.1",
-    "birpc": "^0.2.17",
+    "birpc": "^2.3.0",
     "bundle-require": "^5.0.0",
     "camelcase": "^8.0.0",
     "clipanion": "^4.0.0-rc.3",
