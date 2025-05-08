@@ -6,3 +6,5 @@ bundled.*
 .vscode
 .aider*
 .env
+
+**/.claude/settings.local.json
