@@ -35,6 +35,13 @@ export const startDevServer2 = async (options: StartDevServerOptions) => {
 
   let server: http.Server | null = null
   let buildContext: esbuild.BuildContext | null = null
+  const mutableHttpHandler = {
+    current: (_req, res) => {
+      // This handler is used before the first build or if a build fails to produce a handler.
+      res.writeHead(503, { "Content-Type": "text/plain" })
+      res.end("Server is initializing or a build is in progress...")
+    },
+  } as { current: http.RequestListener }
 
   const ignore = await isGitIgnored({ cwd: rootDirectory })
 
@@ -78,12 +85,13 @@ export const startDevServer2 = async (options: StartDevServerOptions) => {
         })
 
         const bundleUrl = pathToFileURL(devBundlePath).href + `?t=${Date.now()}`
+        if ("cache" in require) {
+          // Clear bun's cache for this file
+          delete require.cache[path.resolve(devBundlePath)]
+        }
         const importedModule = await import(bundleUrl)
 
-        if (server) {
-          await new Promise<void>((resolve) => server!.close(() => resolve()))
-        }
-
+        // Update the currentHttpHandler based on the build result
         if (config.platform === "node") {
           const winterSpecBundle = importedModule.default
           if (!winterSpecBundle) {
@@ -95,34 +103,36 @@ export const startDevServer2 = async (options: StartDevServerOptions) => {
               errorMessage,
               buildUpdatedAtMs: Date.now(),
             })
-            return
+            // Set handler to show error
+            mutableHttpHandler.current = (_req, res) => {
+              res.writeHead(500, { "Content-Type": "text/plain" })
+              res.end(errorMessage)
+            }
+            return // Return early as the build effectively failed to produce a usable handler
           }
-          const nodeHandler = getNodeHandler(winterSpecBundle, {
-            port: port,
+          mutableHttpHandler.current = getNodeHandler(winterSpecBundle, {
+            port: port, // Used by getNodeHandler for its internal logic if needed
             middleware: options.middleware,
           })
-          server = http.createServer(nodeHandler)
         } else {
           // wintercg-minimal
           const errorMessage =
             "Built for wintercg-minimal. This bundle calls addFetchListener and is not directly servable by startDevServer2's Node.js server. The bundle was executed, but the HTTP server may not reflect changes or serve content as expected."
           console.warn(errorMessage)
-          // Notify via onBuildEnd about the situation, possibly as a partial success or specific warning.
-          // For simplicity, we'll still call it a "success" in terms of bundling, but the serving aspect is limited.
-          // A more advanced system might have a different status for this.
-          // options.onBuildEnd?.({ type: "warning", message: errorMessage, buildUpdatedAtMs: Date.now() });
-
-          // Create a placeholder server if none exists, or let the old one (if any) continue.
-          // This state is not ideal for wintercg-minimal.
-          if (!server) {
-            server = http.createServer((req, res) => {
-              res.writeHead(500, { "Content-Type": "text/plain" })
-              res.end(errorMessage)
-            })
+          // Set handler to show informational message for wintercg-minimal
+          mutableHttpHandler.current = (_req, res) => {
+            res.writeHead(500, { "Content-Type": "text/plain" })
+            res.end(errorMessage)
           }
+          // The bundle (importedModule) was executed, which is the primary effect for wintercg-minimal in this context.
         }
 
-        if (server && !server.listening) {
+        // Create and start the server only if it hasn't been started yet.
+        if (!server) {
+          server = http.createServer((req, res) =>
+            mutableHttpHandler.current(req, res)
+          )
+
           server.on("error", (err: NodeJS.ErrnoException) => {
             if (err.code === "EADDRINUSE") {
               const errorMessage = `Port ${port} is already in use. Please choose a different port.`
@@ -202,7 +212,6 @@ export const startDevServer2 = async (options: StartDevServerOptions) => {
   })
 
   const handleFileChange = async (isManifestChange: boolean = false) => {
-    console.log("handling file change")
     if (isManifestChange) {
       await updateManifest()
     }
@@ -210,7 +219,6 @@ export const startDevServer2 = async (options: StartDevServerOptions) => {
   }
 
   watcher.on("change", async (file) => {
-    console.log("change", file)
     await handleFileChange(false)
   })
   // add is initially called for all files, just ignoring for now
@@ -228,8 +236,8 @@ export const startDevServer2 = async (options: StartDevServerOptions) => {
 
   // Initial build is triggered by watcher's ignoreInitial: false
   // If ignoreInitial were true, you'd call:
-  // await updateManifest();
-  // await build();
+  await updateManifest()
+  await build()
 
   const stop = async () => {
     watcher.close()
