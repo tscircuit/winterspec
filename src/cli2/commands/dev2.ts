@@ -31,7 +31,7 @@ export class Dev2Command extends BaseCommand {
 
         const configWithOverrides = {
           ...config,
-          emulateWinterCG: options.emulateWintercg ?? true
+          emulateWinterCG: options.emulateWintercg ?? true,
         }
 
         await this.startDev2Server({
@@ -78,13 +78,18 @@ export class Dev2Command extends BaseCommand {
     let server: http.Server | null = null
     let buildContext: esbuild.BuildContext | null = null
     let isFirstBuild = true
-    let httpHandler: ((req: IncomingMessage, res: ServerResponse) => void) | null = null
+    let httpHandler:
+      | ((req: IncomingMessage, res: ServerResponse) => void)
+      | null = null
 
     // Function to create or update the manifest
     const updateManifest = async () => {
       const manifest = await constructManifest({
         routesDirectory: config.routesDirectory,
-        bundledAdapter: config.platform === "wintercg-minimal" ? "wintercg-minimal" : undefined,
+        bundledAdapter:
+          config.platform === "wintercg-minimal"
+            ? "wintercg-minimal"
+            : undefined,
       })
       await fs.writeFile(manifestPath, manifest, "utf-8")
     }
@@ -101,7 +106,8 @@ export class Dev2Command extends BaseCommand {
           buildContext = await esbuild.context({
             entryPoints: [manifestPath],
             bundle: true,
-            platform: config.platform === "wintercg-minimal" ? "browser" : "node",
+            platform:
+              config.platform === "wintercg-minimal" ? "browser" : "node",
             packages: config.platform === "node" ? "external" : undefined,
             format: config.platform === "wintercg-minimal" ? "cjs" : "esm",
             outfile: devBundlePath,
@@ -116,27 +122,26 @@ export class Dev2Command extends BaseCommand {
 
         if (result.errors.length === 0) {
           buildSpinner.succeed(`Built in ${timeFormatter(durationMs)}`)
-          
+
           // Import the bundle and create a new request handler
           try {
             // Clean require cache to ensure we get the latest version
             delete require.cache[devBundlePath]
-            
+
             // Import the fresh bundle
             const { default: routeMap } = await import(devBundlePath)
-            
+
             // Create a new server from the route map
-            server = await createNodeServerFromRouteMap(
-              routeMap,
-              { defaultOrigin: `http://localhost:${port}` }
-            )
-            
+            server = await createNodeServerFromRouteMap(routeMap, {
+              defaultOrigin: `http://localhost:${port}`,
+            })
+
             // No need for a separate request handler - the server handles it
-            
+
             // Start server on first successful build
             if (isFirstBuild) {
               // Server already created by createNodeServerFromRouteMap
-              
+
               server.listen(port, () => {
                 listenSpinner.stopAndPersist({
                   symbol: "☃️",
@@ -196,7 +201,7 @@ export class Dev2Command extends BaseCommand {
     })
 
     watcher.on("unlinkDir", async () => {
-      await updateManifest() 
+      await updateManifest()
       await build()
     })
 
@@ -205,11 +210,11 @@ export class Dev2Command extends BaseCommand {
       if (server) {
         server.close()
       }
-      
+
       if (buildContext) {
         await buildContext.dispose()
       }
-      
+
       watcher.close()
     }
 
@@ -217,7 +222,7 @@ export class Dev2Command extends BaseCommand {
       await cleanup()
       process.exit(0)
     })
-    
+
     process.on("SIGTERM", async () => {
       await cleanup()
       process.exit(0)
