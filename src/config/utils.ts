@@ -129,7 +129,7 @@ export const loadConfig = async (
 
     debug("Config loaded from root directory: %s", potentialConfigPath)
 
-    loadedConfig = config
+    loadedConfig = config.default ?? config
   }
 
   debug("Validating config...")
