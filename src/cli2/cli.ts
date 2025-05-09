@@ -2,6 +2,7 @@
 import { Command } from "commander"
 import { BundleCommand } from "./commands/bundle.js"
 import { DevCommand } from "./commands/dev.js"
+import { Dev2Command } from "./commands/dev2.js"
 import { CodeGenRouteTypes } from "./commands/codegen/route-types.js"
 import { CodeGenOpenAPI } from "./commands/codegen/openapi.js"
 import { CodeGenKyTypes } from "./commands/generate/ky-types.js"
@@ -20,6 +21,7 @@ const program = new Command()
 const commands = [
   new BundleCommand(program),
   new DevCommand(program),
+  new Dev2Command(program),
   new CodeGenRouteTypes(program),
   new CodeGenOpenAPI(program),
   new BundleRoutesCommand(program),
