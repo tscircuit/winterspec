@@ -18,12 +18,10 @@ import { once } from "node:events"
 // When it detects a relevant file system change, it rebundles the entire app.
 // It does not use a headless dev server bundler and RPC
 export const startDevServer2 = async (options: StartDevServerOptions) => {
-  console.log({ options })
   const config = await loadConfig(
     options.rootDirectory ?? process.cwd(),
     options.config
   )
-  console.log(config)
 
   const port = options.port ?? 3000
   let isFirstBuildListening = true
@@ -206,7 +204,6 @@ export const startDevServer2 = async (options: StartDevServerOptions) => {
       if (!path.relative(rootDirectory, filePath).startsWith("..")) {
         return ignore(filePath)
       }
-      console.log(filePath)
       return true
     },
   })
@@ -226,11 +223,9 @@ export const startDevServer2 = async (options: StartDevServerOptions) => {
   //   await handleFileChange(true)
   // })
   watcher.on("unlink", async (file) => {
-    console.log("unlink", file)
     await handleFileChange(true)
   })
   watcher.on("unlinkDir", async (dir) => {
-    console.log("unlinkDir", dir)
     await handleFileChange(true)
   })
 
