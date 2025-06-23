@@ -105,7 +105,7 @@
     "tsx": "^4.7.0",
     "type-fest": "^4.10.0",
     "typed-emitter": "^2.1.0",
-    "typescript": "^5.3.3",
+    "typescript": "^5.8.3",
     "zod": "^3.22.4"
   },
   "dependencies": {
@@ -128,7 +128,7 @@
     "next-route-matcher": "^1.0.2",
     "object-hash": "^3.0.0",
     "ora": "^8.0.1",
-    "ts-morph": "^21.0.1",
+    "ts-morph": "^26.0.0",
     "watcher": "^2.3.0",
     "yargs": "^17.7.2"
   },
