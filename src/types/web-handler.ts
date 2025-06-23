@@ -197,10 +197,10 @@ export function mergeHeaders(
     Object.fromEntries([
       ...(h1 instanceof Headers
         ? h1
-        : new Headers(h1 ?? undefined).entries() ?? []),
+        : (new Headers(h1 ?? undefined).entries() ?? [])),
       ...(h2 instanceof Headers
         ? h2
-        : new Headers(h2 ?? undefined).entries() ?? []),
+        : (new Headers(h2 ?? undefined).entries() ?? [])),
     ])
   )
 }
