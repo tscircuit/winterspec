@@ -3,7 +3,6 @@ import { constructManifest } from "./construct-manifest.js"
 import { ResolvedWinterSpecConfig } from "src/config/utils.js"
 import os from "node:os"
 import path from "node:path"
-import fs from "node:fs"
 
 export interface BundleResult {
   code: string
@@ -23,47 +22,34 @@ export const bundle = async (
     }
   }
 
+  // esbuild does not support external source maps without writing to a temp file
+  // so we need to write to a temp file
+  const tempPath = path.join(os.tmpdir(), `bundle-${Date.now()}.js`)
+
   const sourcemap = options.sourcemap ?? "inline"
 
-  const buildOptions: esbuild.BuildOptions = {
+  const result = await esbuild.build({
     stdin: {
       contents: await constructManifest(config),
       resolveDir: config.routesDirectory,
       loader: "ts",
     },
     bundle: true,
+    write: false,
     format: "esm",
-    sourcemap: sourcemap !== false,
+    sourcemap,
+    outfile: tempPath,
     ...platformBundleOptions,
-  }
+  })
 
-  // For external source maps, use temp file approach
-  if (sourcemap === "external") {
-    const tempPath = path.join(os.tmpdir(), `bundle-${Date.now()}.js`)
+  const code =
+    result.outputFiles?.find((file) => file.path.endsWith(".js"))?.text || ""
+  const sourceMapFile = result.outputFiles?.find((file) =>
+    file.path.endsWith(".map")
+  )
 
-    await esbuild.build({
-      ...buildOptions,
-      outfile: tempPath,
-      sourcemap: "external",
-    })
-
-    const code = fs.readFileSync(tempPath, "utf8")
-    const sourceMap = fs.readFileSync(`${tempPath}.map`, "utf8")
-
-    // Clean up temp files
-    fs.unlinkSync(tempPath)
-    fs.unlinkSync(`${tempPath}.map`)
-
-    return { code, sourceMap }
-  } else {
-    // For inline/disabled source maps, use write: false
-    const result = await esbuild.build({
-      ...buildOptions,
-      write: false,
-    })
-
-    return {
-      code: result.outputFiles?.[0]?.text || "",
-    }
+  return {
+    code,
+    sourceMap: sourcemap === "external" ? sourceMapFile?.text : undefined,
   }
 }
