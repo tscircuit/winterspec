@@ -25,49 +25,41 @@ export const bundle = async (
 
   const sourcemap = options.sourcemap ?? "inline"
 
-  let result: esbuild.BuildResult
+  const buildOptions: esbuild.BuildOptions = {
+    stdin: {
+      contents: await constructManifest(config),
+      resolveDir: config.routesDirectory,
+      loader: "ts",
+    },
+    bundle: true,
+    format: "esm",
+    sourcemap: sourcemap !== false,
+    ...platformBundleOptions,
+  }
 
+  // For external source maps, use temp file approach
   if (sourcemap === "external") {
-    // For external source maps, we need to build with write: true first
-    const tempDir = os.tmpdir()
-    const tempPath = path.join(tempDir, `bundle-${Date.now()}.js`)
+    const tempPath = path.join(os.tmpdir(), `bundle-${Date.now()}.js`)
 
     await esbuild.build({
-      stdin: {
-        contents: await constructManifest(config),
-        resolveDir: config.routesDirectory,
-        loader: "ts",
-      },
-      bundle: true,
-      format: "esm",
+      ...buildOptions,
       outfile: tempPath,
       sourcemap: "external",
-      ...platformBundleOptions,
     })
 
-    // Read the generated files
-    const bundleResult: BundleResult = {
-      code: fs.readFileSync(tempPath, "utf8"),
-      sourceMap: fs.readFileSync(`${tempPath}.map`, "utf8"),
-    }
+    const code = fs.readFileSync(tempPath, "utf8")
+    const sourceMap = fs.readFileSync(`${tempPath}.map`, "utf8")
 
     // Clean up temp files
     fs.unlinkSync(tempPath)
     fs.unlinkSync(`${tempPath}.map`)
 
-    return bundleResult
+    return { code, sourceMap }
   } else {
-    result = await esbuild.build({
-      stdin: {
-        contents: await constructManifest(config),
-        resolveDir: config.routesDirectory,
-        loader: "ts",
-      },
-      bundle: true,
-      format: "esm",
+    // For inline/disabled source maps, use write: false
+    const result = await esbuild.build({
+      ...buildOptions,
       write: false,
-      sourcemap,
-      ...platformBundleOptions,
     })
 
     return {
