@@ -27,7 +27,7 @@ test.serial("test bundle with Node adapter", async (t) => {
     currentDirectory,
     "bundled.entrypoint.mjs"
   )
-  await fs.writeFile(bundlePath, bundled, "utf-8")
+  await fs.writeFile(bundlePath, bundled.code, "utf-8")
   await fs.writeFile(
     bundleEntrypointPath,
     `
@@ -104,7 +104,7 @@ test.serial(
       currentDirectory,
       "bundled.entrypoint.mjs"
     )
-    await fs.writeFile(bundlePath, bundled, "utf-8")
+    await fs.writeFile(bundlePath, bundled.code, "utf-8")
     await fs.writeFile(
       bundleEntrypointPath,
       `
