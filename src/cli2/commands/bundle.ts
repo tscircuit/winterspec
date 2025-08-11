@@ -22,17 +22,17 @@ export class BundleCommand extends BaseCommand {
         const spinner = ora("Bundling...").start()
         const buildStartedAt = performance.now()
 
-        const output = await bundle(config)
+        const bundleResult = await bundle(config)
 
         await fs.mkdir(path.dirname(options.output), { recursive: true })
-        await fs.writeFile(options.output, output)
+        await fs.writeFile(options.output, bundleResult.code)
 
         spinner.stopAndPersist({
           symbol: "☃️",
           text: ` brr... bundled in ${durationFormatter({
             allowMultiples: ["m", "s", "ms"],
           })(performance.now() - buildStartedAt)} (${sizeFormatter()(
-            output.length
+            bundleResult.code.length
           )})`,
         })
       })
