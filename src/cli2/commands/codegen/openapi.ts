@@ -69,7 +69,8 @@ export class CodeGenOpenAPI extends BaseCommand {
         const config = await this.loadConfig(options)
 
         const tempBundlePath = path.join(os.tmpdir(), `${randomUUID()}.mjs`)
-        await fs.writeFile(tempBundlePath, await bundle(config))
+        const bundleResult = await bundle(config)
+        await fs.writeFile(tempBundlePath, bundleResult.code)
         const runtimeBundle = await loadBundle(
           pathToFileURL(tempBundlePath).href
         )

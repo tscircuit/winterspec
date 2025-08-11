@@ -66,7 +66,8 @@ export class CodeGenOpenAPI extends BaseCommand {
 
   async run(config: ResolvedWinterSpecConfig) {
     const tempBundlePath = path.join(os.tmpdir(), `${randomUUID()}.mjs`)
-    await fs.writeFile(tempBundlePath, await bundle(config))
+    const bundleResult = await bundle(config)
+    await fs.writeFile(tempBundlePath, bundleResult.code)
     const runtimeBundle = await loadBundle(pathToFileURL(tempBundlePath).href)
 
     const globalRouteSpec = Object.values(

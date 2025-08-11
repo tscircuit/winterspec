@@ -1,8 +1,18 @@
 import esbuild from "esbuild"
 import { constructManifest } from "./construct-manifest.js"
 import { ResolvedWinterSpecConfig } from "src/config/utils.js"
+import os from "node:os"
+import path from "node:path"
 
-export const bundle = async (config: ResolvedWinterSpecConfig) => {
+export interface BundleResult {
+  code: string
+  sourceMap?: string
+}
+
+export const bundle = async (
+  config: ResolvedWinterSpecConfig,
+  options: { sourcemap?: boolean | "inline" | "external" } = {}
+): Promise<BundleResult> => {
   let platformBundleOptions: Partial<esbuild.BuildOptions> = {}
 
   if (config.platform === "node") {
@@ -12,6 +22,12 @@ export const bundle = async (config: ResolvedWinterSpecConfig) => {
     }
   }
 
+  // esbuild does not support external source maps without writing to a temp file
+  // so we need to write to a temp file
+  const tempPath = path.join(os.tmpdir(), `bundle-${Date.now()}.js`)
+
+  const sourcemap = options.sourcemap ?? "inline"
+
   const result = await esbuild.build({
     stdin: {
       contents: await constructManifest(config),
@@ -19,11 +35,21 @@ export const bundle = async (config: ResolvedWinterSpecConfig) => {
       loader: "ts",
     },
     bundle: true,
-    format: "esm",
     write: false,
-    sourcemap: "inline",
+    format: "esm",
+    sourcemap,
+    outfile: tempPath,
     ...platformBundleOptions,
   })
 
-  return result.outputFiles![0].text
+  const code =
+    result.outputFiles?.find((file) => file.path.endsWith(".js"))?.text || ""
+  const sourceMapFile = result.outputFiles?.find((file) =>
+    file.path.endsWith(".map")
+  )
+
+  return {
+    code,
+    sourceMap: sourcemap === "external" ? sourceMapFile?.text : undefined,
+  }
 }

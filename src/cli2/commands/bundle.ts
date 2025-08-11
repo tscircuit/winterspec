@@ -16,25 +16,64 @@ export class BundleCommand extends BaseCommand {
       .option("--tsconfig <path>", "Path to your tsconfig.json")
       .option("--routes-directory <path>", "Path to your routes directory")
       .option("--platform <platform>", "The platform to bundle for")
+      .option(
+        "--sourcemap <type>",
+        "Source map generation: 'external' for .js.map files, 'inline' for inline sourcemaps, 'none' to disable",
+        "inline"
+      )
       .action(async (options) => {
         const config = await this.loadConfig(options)
+
+        // Validate sourcemap option
+        if (
+          options.sourcemap &&
+          !["external", "inline", "none"].includes(options.sourcemap)
+        ) {
+          throw new Error("sourcemap must be one of: external, inline, none")
+        }
 
         const spinner = ora("Bundling...").start()
         const buildStartedAt = performance.now()
 
-        const output = await bundle(config)
+        // Determine sourcemap option
+        let sourcemapOption: boolean | "inline" | "external" = "inline"
+        if (options.sourcemap === "none") {
+          sourcemapOption = false
+        } else if (options.sourcemap === "external") {
+          sourcemapOption = "external"
+        } else if (options.sourcemap === "inline") {
+          sourcemapOption = "inline"
+        }
+
+        const bundleResult = await bundle(config, {
+          sourcemap: sourcemapOption,
+        })
 
         await fs.mkdir(path.dirname(options.output), { recursive: true })
-        await fs.writeFile(options.output, output)
+        await fs.writeFile(options.output, bundleResult.code)
 
-        spinner.stopAndPersist({
-          symbol: "☃️",
-          text: ` brr... bundled in ${durationFormatter({
-            allowMultiples: ["m", "s", "ms"],
-          })(performance.now() - buildStartedAt)} (${sizeFormatter()(
-            output.length
-          )})`,
-        })
+        // Write source map file if external source map was generated
+        if (bundleResult.sourceMap) {
+          const sourcemapPath = `${options.output}.map`
+          await fs.writeFile(sourcemapPath, bundleResult.sourceMap)
+          spinner.stopAndPersist({
+            symbol: "☃️",
+            text: ` brr... bundled in ${durationFormatter({
+              allowMultiples: ["m", "s", "ms"],
+            })(performance.now() - buildStartedAt)} (${sizeFormatter()(
+              bundleResult.code.length
+            )}) with source map`,
+          })
+        } else {
+          spinner.stopAndPersist({
+            symbol: "☃️",
+            text: ` brr... bundled in ${durationFormatter({
+              allowMultiples: ["m", "s", "ms"],
+            })(performance.now() - buildStartedAt)} (${sizeFormatter()(
+              bundleResult.code.length
+            )})`,
+          })
+        }
       })
   }
 }
