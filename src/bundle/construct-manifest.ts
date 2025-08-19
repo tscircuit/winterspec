@@ -30,7 +30,7 @@ export const constructManifest = async (options: ConstructManifestOptions) => {
 
   return (
     `
-import {getRouteMatcher} from "next-route-matcher"
+import {getRouteMatcher} from "@tscircuit/routematch"
 import { makeRequestAgainstWinterSpec } from "winterspec"
 
 ${routes
