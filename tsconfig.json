@@ -9,9 +9,7 @@
     "strict": true /* Enable all strict type-checking options. */,
     "skipLibCheck": true /* Skip type checking all .d.ts files. */,
     "paths": {
-      "src/*": ["./src/*"],
-      "winterspec": ["./src/index.ts"],
-      "winterspec/*": ["./src/*"]
+      "src/*": ["./src/*"]
     },
     "resolveJsonModule": true,
     "rootDir": "./"
