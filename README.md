@@ -8,7 +8,6 @@
 WinterSpec is an opinionated HTTP framework for TypeScript. Out of the box, it:
 
 - Uses filepath-based routing
-- [Soon] generates ergonomic SDKs across multiple languages
 - [Soon] generates OpenAPI documentation
 - Provides end-to-end type safety for your middleware and endpoints
 - Can be built into a zero-dependency module and embedded into other applications
