@@ -32,6 +32,7 @@ export const startDevServer2 = async (options: StartDevServerOptions) => {
   const devBundlePath = path.join(tempDir, "dev-bundle.js")
 
   let server: http.Server | null = null
+  let buildContext: esbuild.BuildContext | null = null
   const mutableHttpHandler = {
     current: (_req, res) => {
       // This handler is used before the first build or if a build fails to produce a handler.
@@ -42,10 +43,6 @@ export const startDevServer2 = async (options: StartDevServerOptions) => {
 
   const ignore = await isGitIgnored({ cwd: rootDirectory })
 
-  let isBuilding = false
-  let rebuildScheduled = false
-  let manifestNeedsUpdate = true
-
   const updateManifest = async () => {
     const manifestContent = await constructManifest({
       routesDirectory: config.routesDirectory,
@@ -55,25 +52,28 @@ export const startDevServer2 = async (options: StartDevServerOptions) => {
     await fs.writeFile(manifestPath, manifestContent, "utf-8")
   }
 
-  const runSingleBuild = async () => {
+  const build = async () => {
     options.onBuildStart?.()
+    const buildStartedAt = performance.now()
+
     try {
-      if (manifestNeedsUpdate) {
+      if (!buildContext) {
         await updateManifest()
-        manifestNeedsUpdate = false
+        buildContext = await esbuild.context({
+          entryPoints: [manifestPath],
+          bundle: true,
+          platform: config.platform === "wintercg-minimal" ? "browser" : "node",
+          packages: config.platform === "node" ? "external" : undefined,
+          format: config.platform === "wintercg-minimal" ? "cjs" : "esm",
+          outfile: devBundlePath,
+          write: true,
+          sourcemap: "inline",
+          logLevel: "silent",
+        })
       }
 
-      const result = await esbuild.build({
-        entryPoints: [manifestPath],
-        bundle: true,
-        platform: config.platform === "wintercg-minimal" ? "browser" : "node",
-        packages: config.platform === "node" ? "external" : undefined,
-        format: config.platform === "wintercg-minimal" ? "cjs" : "esm",
-        outfile: devBundlePath,
-        write: true,
-        sourcemap: "inline",
-        logLevel: "silent",
-      })
+      const result = await buildContext.rebuild()
+      const durationMs = performance.now() - buildStartedAt
 
       if (result.errors.length === 0) {
         options.onBuildEnd?.({
@@ -190,25 +190,7 @@ export const startDevServer2 = async (options: StartDevServerOptions) => {
         errorMessage: err.message,
         buildUpdatedAtMs: Date.now(),
       })
-      // If the manifest update failed, try again on the next build.
-      manifestNeedsUpdate = true
     }
-  }
-
-  const build = async () => {
-    if (isBuilding) {
-      rebuildScheduled = true
-      return
-    }
-
-    isBuilding = true
-
-    do {
-      rebuildScheduled = false
-      await runSingleBuild()
-    } while (rebuildScheduled)
-
-    isBuilding = false
   }
 
   const watcher = new Watcher(rootDirectory, {
@@ -228,7 +210,7 @@ export const startDevServer2 = async (options: StartDevServerOptions) => {
 
   const handleFileChange = async (isManifestChange: boolean = false) => {
     if (isManifestChange) {
-      manifestNeedsUpdate = true
+      await updateManifest()
     }
     await build()
   }
@@ -247,7 +229,9 @@ export const startDevServer2 = async (options: StartDevServerOptions) => {
     await handleFileChange(true)
   })
 
-  // Initial build is triggered immediately.
+  // Initial build is triggered by watcher's ignoreInitial: false
+  // If ignoreInitial were true, you'd call:
+  await updateManifest()
   await build()
 
   const stop = async () => {
@@ -255,7 +239,9 @@ export const startDevServer2 = async (options: StartDevServerOptions) => {
     if (server) {
       await new Promise<void>((resolve) => server!.close(() => resolve()))
     }
-    esbuild.stop()
+    if (buildContext) {
+      await buildContext.dispose()
+    }
   }
 
   process.on("SIGINT", async () => {
