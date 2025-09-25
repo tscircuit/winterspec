@@ -6,6 +6,7 @@ import http from "node:http"
 import path from "node:path"
 import fs from "node:fs/promises"
 import { isGitIgnored } from "globby"
+import { Mutex } from "async-mutex"
 import { getTempPathInApp } from "src/bundle/get-temp-path-in-app.js"
 import { constructManifest } from "src/bundle/construct-manifest.js"
 import { formatMessages } from "esbuild"
@@ -51,6 +52,8 @@ export const startDevServer2 = async (options: StartDevServerOptions) => {
     })
     await fs.writeFile(manifestPath, manifestContent, "utf-8")
   }
+
+  const buildMutex = new Mutex()
 
   const build = async () => {
     options.onBuildStart?.()
@@ -209,10 +212,12 @@ export const startDevServer2 = async (options: StartDevServerOptions) => {
   })
 
   const handleFileChange = async (isManifestChange: boolean = false) => {
-    if (isManifestChange) {
-      await updateManifest()
-    }
-    await build()
+    await buildMutex.runExclusive(async () => {
+      if (isManifestChange) {
+        await updateManifest()
+      }
+      await build()
+    })
   }
 
   watcher.on("change", async (file) => {
@@ -231,8 +236,7 @@ export const startDevServer2 = async (options: StartDevServerOptions) => {
 
   // Initial build is triggered by watcher's ignoreInitial: false
   // If ignoreInitial were true, you'd call:
-  await updateManifest()
-  await build()
+  await handleFileChange(true)
 
   const stop = async () => {
     watcher.close()
