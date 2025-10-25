@@ -1,4 +1,4 @@
-import { getRouteMatcher } from "next-route-matcher"
+import { getRouteMatcher } from "@tscircuit/routematch"
 import { normalizeRouteMap } from "../lib/normalize-route-map.js"
 import { WinterSpecRouteFn } from "src/types/web-handler.js"
 import {

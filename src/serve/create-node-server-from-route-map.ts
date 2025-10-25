@@ -1,5 +1,5 @@
 import { createServer } from "node:http"
-import { getRouteMatcher } from "next-route-matcher"
+import { getRouteMatcher } from "@tscircuit/routematch"
 import { normalizeRouteMap } from "../lib/normalize-route-map.js"
 import {
   type TransformToNodeOptions,
