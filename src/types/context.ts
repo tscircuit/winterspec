@@ -8,29 +8,31 @@ import {
 
 export type ResponseTypeToContext<
   ResponseType extends SerializableToResponse | Response,
-> = Exclude<ResponseType, Response> extends WinterSpecJsonResponse<infer T>
-  ? {
-      json: typeof WinterSpecResponse.json<T>
-    }
-  : Exclude<ResponseType, Response> extends WinterSpecMultiPartFormDataResponse<
-        infer T
-      >
+> =
+  Exclude<ResponseType, Response> extends WinterSpecJsonResponse<infer T>
     ? {
-        multipartFormData: typeof WinterSpecResponse.multipartFormData<T>
+        json: typeof WinterSpecResponse.json<T>
       }
-    : Exclude<ResponseType, Response> extends WinterSpecCustomResponse<
-          infer T,
-          infer C
-        >
+    : Exclude<
+          ResponseType,
+          Response
+        > extends WinterSpecMultiPartFormDataResponse<infer T>
       ? {
-          custom: typeof WinterSpecResponse.custom<T, C>
+          multipartFormData: typeof WinterSpecResponse.multipartFormData<T>
         }
-      : {
-          json: typeof WinterSpecResponse.json<unknown>
-          multipartFormData: typeof WinterSpecResponse.multipartFormData<
-            Record<string, string>
+      : Exclude<ResponseType, Response> extends WinterSpecCustomResponse<
+            infer T,
+            infer C
           >
-        }
+        ? {
+            custom: typeof WinterSpecResponse.custom<T, C>
+          }
+        : {
+            json: typeof WinterSpecResponse.json<unknown>
+            multipartFormData: typeof WinterSpecResponse.multipartFormData<
+              Record<string, string>
+            >
+          }
 
 const DEFAULT_CONTEXT = {
   json: WinterSpecResponse.json,

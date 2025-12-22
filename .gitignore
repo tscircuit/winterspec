@@ -8,3 +8,6 @@ bundled.*
 .env
 
 **/.claude/settings.local.json
+bun.lockb
+bun.lock
+package-lock.json
