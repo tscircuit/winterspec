@@ -33,7 +33,35 @@ test("should throw an error when responding with raw JSON", async (t) => {
   })
   t.true(
     data.error.includes(
-      "Use ctx.json({...}) instead of returning an object directly"
+      "Use ctx.json(...) instead of returning an object directly"
     )
   )
+})
+
+test("should log a clear ctx.json instruction for raw object responses", async (t) => {
+  const { axios, getLogs } = await getTestRoute(t, {
+    globalSpec: {
+      authMiddleware: {},
+    },
+    routeSpec: {
+      methods: ["GET"],
+      jsonBody: z.any(),
+      jsonResponse: z.any(),
+    },
+    routePath: "/",
+    routeFn: () => {
+      return { foo: "bar" } as any
+    },
+  })
+
+  const response = await axios.get("/", { validateStatus: () => true })
+  t.is(response.status, 500)
+
+  const logs = getLogs()
+  const errorLogText = logs.error
+    .flat()
+    .map((entry) => (entry instanceof Error ? entry.message : String(entry)))
+    .join("\n")
+
+  t.true(errorLogText.includes("Use ctx.json(...) instead of returning an object directly"))
 })
