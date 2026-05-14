@@ -36,4 +36,5 @@ test("should throw an error when responding with raw JSON", async (t) => {
       "Use ctx.json({...}) instead of returning an object directly"
     )
   )
+  t.true(data.error.includes("Example: return ctx.json({ ok: true })."))
 })
