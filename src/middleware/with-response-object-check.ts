@@ -1,4 +1,3 @@
-import { ResponseValidationError } from "./http-exceptions.js"
 import { Middleware } from "./types.js"
 import { RouteSpec } from "src/types/route-spec.js"
 
@@ -9,8 +8,11 @@ export const withResponseObjectCheck: Middleware<
   const rawResponse = await next(req, ctx)
 
   if (typeof rawResponse === "object" && !(rawResponse instanceof Response)) {
+    const url = new URL(req.url)
     throw new Error(
-      "Use ctx.json({...}) instead of returning an object directly."
+      `Invalid route return value for ${req.method} ${url.pathname}. ` +
+        "Use ctx.json({...}) instead of returning an object directly. " +
+        "Example: return ctx.json({ ok: true })."
     )
   }
 
