@@ -31,9 +31,6 @@ test("should throw an error when responding with raw JSON", async (t) => {
   const { data } = await axios.get("/", {
     validateStatus: () => true,
   })
-  t.true(
-    data.error.includes(
-      "Use ctx.json({...}) instead of returning an object directly"
-    )
-  )
+  t.true(data.error.includes("returned a plain object"))
+  t.true(data.error.includes("ctx.json"))
 })
