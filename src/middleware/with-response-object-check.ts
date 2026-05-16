@@ -9,8 +9,12 @@ export const withResponseObjectCheck: Middleware<
   const rawResponse = await next(req, ctx)
 
   if (typeof rawResponse === "object" && !(rawResponse instanceof Response)) {
+    const method = req.method
+    const path = new URL(req.url).pathname
     throw new Error(
-      "Use ctx.json({...}) instead of returning an object directly."
+      `Route handler for ${method} ${path} returned a plain object instead of a Response. ` +
+        `Use ctx.json({...}) instead of returning an object directly.\n` +
+        `Example fix: return ctx.json({ ok: true })`
     )
   }
 
