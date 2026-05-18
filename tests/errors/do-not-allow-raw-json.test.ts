@@ -32,6 +32,7 @@ test("should throw an error when responding with raw JSON", async (t) => {
     validateStatus: () => true,
   })
   t.true(data.error.includes("GET"))
+  t.true(data.error.includes("/"))
   t.true(data.error.includes("returned a plain object"))
   t.true(data.error.includes("ctx.json"))
 })

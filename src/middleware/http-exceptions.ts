@@ -70,3 +70,14 @@ export class ResponseValidationError extends WinterSpecMiddlewareError {
     super(formatZodError(error), 500)
   }
 }
+
+export class RouteReturnedPlainObjectError extends WinterSpecMiddlewareError {
+  constructor(method: string, path: string) {
+    super(
+      `Route handler for ${method} ${path} returned a plain object instead of a Response. ` +
+        `Use ctx.json({...}) instead of returning an object directly.\n` +
+        `Example fix: return ctx.json({ ok: true })`,
+      500
+    )
+  }
+}
