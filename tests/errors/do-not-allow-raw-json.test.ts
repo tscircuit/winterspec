@@ -31,6 +31,7 @@ test("should throw an error when responding with raw JSON", async (t) => {
   const { data } = await axios.get("/", {
     validateStatus: () => true,
   })
+  t.true(data.error.includes("Route GET /"))
   t.true(
     data.error.includes(
       "Use ctx.json({...}) instead of returning an object directly"
