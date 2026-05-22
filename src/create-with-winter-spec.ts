@@ -17,7 +17,10 @@ import { withMethods } from "./middleware/with-methods.js"
 import { withInputValidation } from "./middleware/with-input-validation.js"
 import { withUnhandledExceptionHandling } from "./middleware/with-unhandled-exception-handling.js"
 import { ResponseValidationError } from "./middleware/http-exceptions.js"
-import { withResponseObjectCheck } from "./middleware/with-response-object-check.js"
+import {
+  RAW_RESPONSE_OBJECT_ERROR_MESSAGE,
+  withResponseObjectCheck,
+} from "./middleware/with-response-object-check.js"
 
 const attachMetadataToRouteFn = <
   const GS extends GlobalSpec,
@@ -126,11 +129,14 @@ function serializeResponse(
 ): Middleware {
   return async (req, ctx, next) => {
     const rawResponse = await next(req, ctx)
+    assertValidRouteResponse(rawResponse)
 
     const statusCode =
       rawResponse instanceof WinterSpecResponse
         ? rawResponse.statusCode()
-        : rawResponse.status
+        : rawResponse instanceof Response
+          ? rawResponse.status
+          : 200
 
     const isSuccess = statusCode >= 200 && statusCode < 300
 
@@ -148,6 +154,22 @@ function serializeResponse(
       throw new ResponseValidationError(err)
     }
   }
+}
+
+function assertValidRouteResponse(response: unknown) {
+  if (
+    response instanceof Response ||
+    (typeof response === "object" &&
+      response !== null &&
+      "serializeToResponse" in response &&
+      typeof response.serializeToResponse === "function")
+  ) {
+    return
+  }
+
+  throw new Error(
+    `${RAW_RESPONSE_OBJECT_ERROR_MESSAGE} Route handlers must return a Response or ctx.json(...).`
+  )
 }
 
 export async function wrapMiddlewares(

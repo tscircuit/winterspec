@@ -1,8 +1,12 @@
-import test from "ava"
+import test, { type ExecutionContext } from "ava"
 import { z } from "zod"
 import { getTestRoute } from "tests/fixtures/get-test-route.js"
+import type { WinterSpecRouteFn } from "src/types/web-handler.js"
 
-test("should throw an error when responding with raw JSON", async (t) => {
+const getInvalidResponseError = async (
+  t: ExecutionContext,
+  routeFn: WinterSpecRouteFn<any, any, any>
+) => {
   const { axios } = await getTestRoute(t, {
     globalSpec: {
       authMiddleware: {},
@@ -23,16 +27,53 @@ test("should throw an error when responding with raw JSON", async (t) => {
       jsonResponse: z.any(),
     },
     routePath: "/",
-    routeFn: (req, ctx) => {
-      return { foo: "bar" } as any
-    },
+    routeFn,
   })
 
   const { data } = await axios.get("/", {
     validateStatus: () => true,
   })
+
+  return data.error
+}
+
+test("should throw an error when responding with raw JSON", async (t) => {
+  const error = await getInvalidResponseError(t, () => {
+    return { foo: "bar" } as any
+  })
+
   t.true(
-    data.error.includes(
+    error.includes(
+      "Use ctx.json({...}) instead of returning an object directly"
+    )
+  )
+})
+
+for (const [name, value] of [
+  ["string", "hello"],
+  ["number", 42],
+  ["boolean", true],
+] as const) {
+  test(`should throw an error when responding with a raw ${name}`, async (t) => {
+    const error = await getInvalidResponseError(t, () => {
+      return value as any
+    })
+
+    t.true(
+      error.includes(
+        "Use ctx.json({...}) instead of returning an object directly"
+      )
+    )
+  })
+}
+
+test("should throw an error when responding with a raw bigint", async (t) => {
+  const error = await getInvalidResponseError(t, () => {
+    return 42n as any
+  })
+
+  t.true(
+    error.includes(
       "Use ctx.json({...}) instead of returning an object directly"
     )
   )
