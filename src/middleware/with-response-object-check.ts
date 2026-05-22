@@ -8,7 +8,10 @@ export const withResponseObjectCheck: Middleware<
 > = async (req, ctx, next) => {
   const rawResponse = await next(req, ctx)
 
-  if (typeof rawResponse === "object" && !(rawResponse instanceof Response)) {
+  if (
+    (typeof rawResponse === "object" && !(rawResponse instanceof Response)) ||
+    typeof rawResponse === "function"
+  ) {
     throw new Error(
       "Use ctx.json({...}) instead of returning an object directly."
     )
