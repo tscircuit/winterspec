@@ -1,7 +1,10 @@
 import test, { type ExecutionContext } from "ava"
 import { z } from "zod"
 import { getTestRoute } from "tests/fixtures/get-test-route.js"
-import type { WinterSpecRouteFn } from "src/types/web-handler.js"
+import type {
+  SerializableToResponse,
+  WinterSpecRouteFn,
+} from "src/types/web-handler.js"
 
 const getInvalidResponseError = async (
   t: ExecutionContext,
@@ -92,4 +95,39 @@ test("should throw an error when responding with undefined", async (t) => {
       "Use ctx.json({...}) instead of returning an object directly"
     )
   )
+})
+
+test("should allow custom serializable response objects", async (t) => {
+  class PlainTextResponse implements SerializableToResponse {
+    statusCode() {
+      return 200
+    }
+
+    serializeToResponse() {
+      return new Response("custom response", {
+        headers: { "content-type": "text/plain" },
+      })
+    }
+  }
+
+  const { axios } = await getTestRoute(t, {
+    globalSpec: {
+      authMiddleware: {},
+    },
+    routeSpec: {
+      methods: ["GET"],
+      jsonResponse: z.object({
+        message: z.string(),
+      }),
+    },
+    routePath: "/",
+    routeFn: () => new PlainTextResponse() as any,
+  })
+
+  const response = await axios.get("/", {
+    responseType: "text",
+  })
+
+  t.is(response.status, 200)
+  t.is(response.data, "custom response")
 })
