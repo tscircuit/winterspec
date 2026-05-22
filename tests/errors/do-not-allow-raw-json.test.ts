@@ -49,6 +49,25 @@ test("should throw an error when responding with raw JSON", async (t) => {
   )
 })
 
+for (const [label, value] of [
+  ["string", "plain text"],
+  ["number", 200],
+  ["boolean", true],
+  ["bigint", 200n],
+] as const) {
+  test(`should throw an error when responding with raw ${label}`, async (t) => {
+    const error = await getInvalidResponseError(t, () => {
+      return value as any
+    })
+
+    t.true(
+      error.includes(
+        "Use ctx.json({...}) instead of returning an object directly"
+      )
+    )
+  })
+}
+
 test("should throw an error when responding with null", async (t) => {
   const error = await getInvalidResponseError(t, () => {
     return null as any
