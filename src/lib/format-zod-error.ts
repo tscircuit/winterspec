@@ -11,6 +11,10 @@ const zodIssueToString = (issue: ZodIssue) => {
 }
 
 export const formatZodError = (error: ZodError): string => {
+  if (!Array.isArray(error.issues)) {
+    return error instanceof Error ? error.message : String(error)
+  }
+
   let message: string
   if (error.issues.length === 1) {
     const issue = error.issues[0]

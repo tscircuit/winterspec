@@ -172,6 +172,12 @@ function serializeToResponse(
   routeSpec: RouteSpec<any>,
   response: SerializableToResponse | Response
 ): Response {
+  if (typeof response === "symbol") {
+    throw new Error(
+      "Use ctx.json({...}) instead of returning a symbol directly."
+    )
+  }
+
   if (!shouldValidateResponse) {
     return "serializeToResponse" in response
       ? response.serializeToResponse(z.any())
