@@ -136,9 +136,10 @@ function serializeResponse(
         ? rawResponse.statusCode()
         : rawResponse instanceof Response
           ? rawResponse.status
-          : 200
+          : undefined
 
-    const isSuccess = statusCode >= 200 && statusCode < 300
+    const isSuccess =
+      typeof statusCode === "number" && statusCode >= 200 && statusCode < 300
 
     try {
       const response = serializeToResponse(
