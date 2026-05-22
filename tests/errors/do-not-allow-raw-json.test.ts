@@ -54,6 +54,8 @@ for (const [label, value] of [
   ["number", 200],
   ["boolean", true],
   ["bigint", 200n],
+  ["symbol", Symbol("raw")],
+  ["function", () => "raw"],
 ] as const) {
   test(`should throw an error when responding with raw ${label}`, async (t) => {
     const error = await getInvalidResponseError(t, () => {
