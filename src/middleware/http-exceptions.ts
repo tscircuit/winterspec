@@ -66,7 +66,20 @@ export class InputValidationError extends BadRequestError {
 }
 
 export class ResponseValidationError extends WinterSpecMiddlewareError {
-  constructor(error: z.ZodError<any>) {
-    super(formatZodError(error), 500)
+  constructor(error: unknown) {
+    const isZodLikeError =
+      typeof error === "object" &&
+      error !== null &&
+      "issues" in error &&
+      Array.isArray((error as any).issues)
+
+    super(
+      isZodLikeError
+        ? formatZodError(error as z.ZodError<any>)
+        : error instanceof Error
+          ? error.message
+          : String(error),
+      500
+    )
   }
 }
