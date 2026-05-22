@@ -17,7 +17,10 @@ import { withMethods } from "./middleware/with-methods.js"
 import { withInputValidation } from "./middleware/with-input-validation.js"
 import { withUnhandledExceptionHandling } from "./middleware/with-unhandled-exception-handling.js"
 import { ResponseValidationError } from "./middleware/http-exceptions.js"
-import { withResponseObjectCheck } from "./middleware/with-response-object-check.js"
+import {
+  RAW_RESPONSE_OBJECT_ERROR_MESSAGE,
+  withResponseObjectCheck,
+} from "./middleware/with-response-object-check.js"
 
 const attachMetadataToRouteFn = <
   const GS extends GlobalSpec,
@@ -126,6 +129,16 @@ function serializeResponse(
 ): Middleware {
   return async (req, ctx, next) => {
     const rawResponse = await next(req, ctx)
+    const responseValue = rawResponse as unknown
+
+    if (
+      typeof responseValue === "object" &&
+      responseValue !== null &&
+      !(responseValue instanceof Response) &&
+      !(responseValue instanceof WinterSpecResponse)
+    ) {
+      throw new Error(RAW_RESPONSE_OBJECT_ERROR_MESSAGE)
+    }
 
     const statusCode =
       rawResponse instanceof WinterSpecResponse
