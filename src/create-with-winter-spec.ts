@@ -127,6 +127,13 @@ function serializeResponse(
   return async (req, ctx, next) => {
     const rawResponse = await next(req, ctx)
 
+    if (rawResponse === null || typeof rawResponse !== "object") {
+      const returnedType = rawResponse === null ? "null" : typeof rawResponse
+      throw new Error(
+        `Use ctx.json({...}) or return a Response instead of returning ${returnedType} directly.`
+      )
+    }
+
     const statusCode =
       rawResponse instanceof WinterSpecResponse
         ? rawResponse.statusCode()
