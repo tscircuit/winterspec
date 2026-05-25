@@ -10,9 +10,12 @@ test("should throw an error when responding with raw JSON", async (t) => {
         async (req, ctx, next) => {
           try {
             return await next(req, ctx)
-          } catch (e: any) {
+          } catch (e: unknown) {
             console.error(e)
-            return Response.json({ error: e.message }, { status: 500 })
+            return Response.json(
+              { error: e instanceof Error ? e.message : String(e) },
+              { status: 500 }
+            )
           }
         },
       ],
@@ -58,8 +61,11 @@ for (const invalidReturn of invalidPrimitiveReturns) {
           async (req, ctx, next) => {
             try {
               return await next(req, ctx)
-            } catch (e: any) {
-              return Response.json({ error: e.message }, { status: 500 })
+            } catch (e: unknown) {
+              return Response.json(
+                { error: e instanceof Error ? e.message : String(e) },
+                { status: 500 }
+              )
             }
           },
         ],
@@ -79,7 +85,7 @@ for (const invalidReturn of invalidPrimitiveReturns) {
       validateStatus: () => true,
     })
 
-    t.true(data.error.includes("Use ctx.json({...}) or return a Response"))
+    t.true(data.error.includes("Use ctx.json(value) or return a Response"))
     t.true(
       data.error.includes(
         `returning ${invalidReturn.returnedType ?? typeof invalidReturn.value}`
