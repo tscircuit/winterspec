@@ -1,6 +1,7 @@
 import test, { type ExecutionContext } from "ava"
 import { z } from "zod"
 import { getTestRoute } from "tests/fixtures/get-test-route.js"
+import { RAW_RESPONSE_OBJECT_ERROR_MESSAGE } from "src/middleware/with-response-object-check.js"
 import type {
   SerializableToResponse,
   WinterSpecRouteFn,
@@ -40,16 +41,16 @@ const getInvalidResponseError = async (
   return data.error
 }
 
+const assertInvalidRawReturnError = (t: ExecutionContext, error: string) => {
+  t.true(error.includes(RAW_RESPONSE_OBJECT_ERROR_MESSAGE))
+}
+
 test("should throw an error when responding with raw JSON", async (t) => {
   const error = await getInvalidResponseError(t, () => {
     return { foo: "bar" } as any
   })
 
-  t.true(
-    error.includes(
-      "Use ctx.json({...}) instead of returning an object directly"
-    )
-  )
+  assertInvalidRawReturnError(t, error)
 })
 
 for (const [label, value] of [
@@ -65,11 +66,7 @@ for (const [label, value] of [
       return value as any
     })
 
-    t.true(
-      error.includes(
-        "Use ctx.json({...}) instead of returning an object directly"
-      )
-    )
+    assertInvalidRawReturnError(t, error)
   })
 }
 
@@ -78,11 +75,7 @@ test("should throw an error when responding with null", async (t) => {
     return null as any
   })
 
-  t.true(
-    error.includes(
-      "Use ctx.json({...}) instead of returning an object directly"
-    )
-  )
+  assertInvalidRawReturnError(t, error)
 })
 
 test("should throw an error when responding with undefined", async (t) => {
@@ -90,11 +83,7 @@ test("should throw an error when responding with undefined", async (t) => {
     return undefined as any
   })
 
-  t.true(
-    error.includes(
-      "Use ctx.json({...}) instead of returning an object directly"
-    )
-  )
+  assertInvalidRawReturnError(t, error)
 })
 
 test("should allow custom serializable response objects", async (t) => {

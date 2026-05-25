@@ -2,7 +2,7 @@ import { Middleware } from "./types.js"
 import { RouteSpec } from "src/types/route-spec.js"
 
 export const RAW_RESPONSE_OBJECT_ERROR_MESSAGE =
-  "Use ctx.json({...}) instead of returning an object directly."
+  "Use ctx.json(value) or another Response object instead of returning raw route values directly."
 
 function hasWinterSpecSerializer(
   rawResponse: unknown
