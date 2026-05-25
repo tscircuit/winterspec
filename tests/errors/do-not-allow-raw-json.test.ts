@@ -10,9 +10,12 @@ test("should throw an error when responding with raw JSON", async (t) => {
         async (req, ctx, next) => {
           try {
             return await next(req, ctx)
-          } catch (e: any) {
+          } catch (e: unknown) {
             console.error(e)
-            return Response.json({ error: e.message }, { status: 500 })
+            return Response.json(
+              { error: e instanceof Error ? e.message : String(e) },
+              { status: 500 }
+            )
           }
         },
       ],
@@ -37,3 +40,56 @@ test("should throw an error when responding with raw JSON", async (t) => {
     )
   )
 })
+
+const invalidPrimitiveReturns = [
+  { label: "undefined", value: undefined },
+  { label: "null", value: null, returnedType: "null" },
+  { label: "string", value: "hello" },
+  { label: "number", value: 42 },
+  { label: "boolean", value: true },
+  { label: "symbol", value: Symbol("invalid") },
+  { label: "bigint", value: BigInt(42) },
+  { label: "function", value: () => "invalid" },
+]
+
+for (const invalidReturn of invalidPrimitiveReturns) {
+  test(`should throw an actionable error when responding with ${invalidReturn.label}`, async (t) => {
+    const { axios } = await getTestRoute(t, {
+      globalSpec: {
+        authMiddleware: {},
+        beforeAuthMiddleware: [
+          async (req, ctx, next) => {
+            try {
+              return await next(req, ctx)
+            } catch (e: unknown) {
+              return Response.json(
+                { error: e instanceof Error ? e.message : String(e) },
+                { status: 500 }
+              )
+            }
+          },
+        ],
+      },
+      routeSpec: {
+        methods: ["GET"],
+        jsonBody: z.any(),
+        jsonResponse: z.any(),
+      },
+      routePath: "/",
+      routeFn: () => {
+        return invalidReturn.value as any
+      },
+    })
+
+    const { data } = await axios.get("/", {
+      validateStatus: () => true,
+    })
+
+    t.true(data.error.includes("Use ctx.json(value) or return a Response"))
+    t.true(
+      data.error.includes(
+        `returning ${invalidReturn.returnedType ?? typeof invalidReturn.value}`
+      )
+    )
+  })
+}
