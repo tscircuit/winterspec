@@ -198,6 +198,18 @@ function serializeToResponse(
     throw new Error("Unknown Response type")
   }
 
+  // Allow routes to return a plain object instead of WinterSpecJsonResponse.
+  // e.g. `return { ok: true }` is equivalent to `return new WinterSpecJsonResponse({ ok: true })`.
+  if (
+    response !== null &&
+    typeof response === "object" &&
+    !(response instanceof Response)
+  ) {
+    return new WinterSpecJsonResponse(response as any).serializeToResponse(
+      routeSpec.jsonResponse ?? z.any()
+    )
+  }
+
   return response
 }
 
