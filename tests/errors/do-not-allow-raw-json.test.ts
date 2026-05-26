@@ -37,3 +37,31 @@ test("should throw an error when responding with raw JSON", async (t) => {
     )
   )
 })
+
+test("should throw a helpful error when route returns undefined", async (t) => {
+  const { axios } = await getTestRoute(t, {
+    globalSpec: {
+      authMiddleware: {},
+      beforeAuthMiddleware: [
+        async (req, ctx, next) => {
+          try {
+            return await next(req, ctx)
+          } catch (e: any) {
+            return Response.json({ error: e.message }, { status: 500 })
+          }
+        },
+      ],
+    },
+    routeSpec: {
+      methods: ["GET"],
+      jsonResponse: z.any(),
+    },
+    routePath: "/",
+    routeFn: (() => undefined) as any,
+  })
+
+  const { data } = await axios.get("/", {
+    validateStatus: () => true,
+  })
+  t.true(data.error.includes("returning undefined directly"))
+})

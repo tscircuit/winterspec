@@ -126,6 +126,7 @@ function serializeResponse(
 ): Middleware {
   return async (req, ctx, next) => {
     const rawResponse = await next(req, ctx)
+    assertResponseWasReturned(rawResponse)
 
     const statusCode =
       rawResponse instanceof WinterSpecResponse
@@ -147,6 +148,18 @@ function serializeResponse(
     } catch (err: any) {
       throw new ResponseValidationError(err)
     }
+  }
+}
+
+function assertResponseWasReturned(
+  rawResponse: unknown
+): asserts rawResponse is SerializableToResponse | Response {
+  if (rawResponse == null || typeof rawResponse !== "object") {
+    throw new Error(
+      `Use ctx.json({...}) or return a Response instead of returning ${String(
+        rawResponse
+      )} directly.`
+    )
   }
 }
 
