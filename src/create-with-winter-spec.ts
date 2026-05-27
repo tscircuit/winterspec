@@ -76,13 +76,13 @@ export const createWithWinterSpec = <const GS extends GlobalSpec>(
             // error response that does not match the routeSpec's response shape
             serializeResponse(globalSpec, routeSpec, false),
             ...(globalSpec.beforeAuthMiddleware ?? []),
+            withResponseObjectCheck,
             firstAuthMiddlewareThatSucceeds(
               authMiddlewares,
               onMultipleAuthMiddlewareFailures
             ),
             ...(globalSpec.afterAuthMiddleware ?? []),
             ...(routeSpec.middleware ?? []),
-            withResponseObjectCheck,
             withMethods(routeSpec.methods),
             withInputValidation({
               supportedArrayFormats: globalSpec.supportedArrayFormats ?? [

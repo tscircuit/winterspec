@@ -1,6 +1,7 @@
 import type { Middleware } from "src/middleware/types.js"
 import {
   createWinterSpecRequest,
+  type SerializableToResponse,
   type WinterSpecRouteFn,
   type WinterSpecRouteParams,
   WinterSpecRequest,
@@ -10,6 +11,7 @@ import type { ReadonlyDeep } from "type-fest"
 import { wrapMiddlewares } from "src/create-with-winter-spec.js"
 import { getDefaultContext } from "./context.js"
 import { Server } from "node:http"
+import { z } from "zod"
 
 export type WinterSpecRouteMatcher = (pathname: string) =>
   | {
@@ -126,11 +128,44 @@ export function makeRequestAgainstWinterSpec(
       return await handle404(winterSpecRequest, getDefaultContext())
     }
 
-    return wrapMiddlewares(
+    const rawResponse = await wrapMiddlewares(
       options.middleware ?? [],
       routeFn,
       winterSpecRequest,
       getDefaultContext()
     )
+
+    return serializeMakeRequestMiddlewareResponse(rawResponse)
   }
+}
+
+function isSerializableToResponse(
+  response: unknown
+): response is SerializableToResponse {
+  return (
+    response !== null &&
+    typeof response === "object" &&
+    "serializeToResponse" in response &&
+    typeof response.serializeToResponse === "function"
+  )
+}
+
+function serializeMakeRequestMiddlewareResponse(
+  response: Response | SerializableToResponse
+): Response {
+  if (response instanceof Response) {
+    return response
+  }
+
+  if (isSerializableToResponse(response)) {
+    return response.serializeToResponse(z.any())
+  }
+
+  if (response !== null && typeof response === "object") {
+    throw new Error(
+      "Invalid response object. Use ctx.json({...}) instead of returning an object directly."
+    )
+  }
+
+  return response as Response
 }

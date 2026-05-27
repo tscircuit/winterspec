@@ -57,6 +57,45 @@ test.serial("custom middleware works", async (t) => {
   t.is(await response.text(), "intercepted")
 })
 
+test.serial("custom middleware can return ctx.json", async (t) => {
+  const bundle = await createAndLoadBundle(t)
+  t.truthy(bundle.makeRequest)
+
+  const response = await bundle.makeRequest(
+    new Request(new URL("https://example.com/health")),
+    {
+      middleware: [
+        (_req, ctx: any) => {
+          return ctx.json({ ok: true })
+        },
+      ],
+    }
+  )
+  t.is(response.status, 200)
+  t.deepEqual(await response.json(), { ok: true })
+})
+
+test.serial("custom middleware rejects raw object responses", async (t) => {
+  const bundle = await createAndLoadBundle(t)
+  t.truthy(bundle.makeRequest)
+
+  const error = await t.throwsAsync(() =>
+    bundle.makeRequest(new Request(new URL("https://example.com/health")), {
+      middleware: [
+        () => {
+          return { ok: true } as any
+        },
+      ],
+    })
+  )
+
+  t.true(
+    error?.message.includes(
+      "Use ctx.json({...}) instead of returning an object directly"
+    )
+  )
+})
+
 test.serial("can make request when hosted on subpath", async (t) => {
   const bundle = await createAndLoadBundle(t)
 
