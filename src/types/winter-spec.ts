@@ -1,10 +1,12 @@
 import type { Middleware } from "src/middleware/types.js"
 import {
   createWinterSpecRequest,
+  type SerializableToResponse,
   type WinterSpecRouteFn,
   type WinterSpecRouteParams,
   WinterSpecRequest,
 } from "./web-handler.js"
+import { z } from "zod"
 
 import type { ReadonlyDeep } from "type-fest"
 import { wrapMiddlewares } from "src/create-with-winter-spec.js"
@@ -123,14 +125,49 @@ export function makeRequestAgainstWinterSpec(
     })
 
     if (!routeFn) {
-      return await handle404(winterSpecRequest, getDefaultContext())
+      const response = await handle404(winterSpecRequest, getDefaultContext())
+      return serializeAdapterMiddlewareResponse(response)
     }
 
-    return wrapMiddlewares(
+    const response = await wrapMiddlewares(
       options.middleware ?? [],
       routeFn,
       winterSpecRequest,
       getDefaultContext()
     )
+
+    return serializeAdapterMiddlewareResponse(response)
   }
+}
+
+function canSerializeToResponse(
+  response: unknown
+): response is SerializableToResponse {
+  return (
+    response !== null &&
+    typeof response === "object" &&
+    "serializeToResponse" in response &&
+    typeof response.serializeToResponse === "function"
+  )
+}
+
+function serializeAdapterMiddlewareResponse(response: unknown): Response {
+  if (response instanceof Response) {
+    return response
+  }
+
+  // Adapter-level middleware runs outside route-specific serializers.
+  if (canSerializeToResponse(response)) {
+    return response.serializeToResponse(z.any())
+  }
+
+  if (typeof response === "object") {
+    throw new Error(
+      "Use ctx.json({...}) instead of returning an object directly."
+    )
+  }
+
+  throw new Error(
+    "WinterSpec handlers must return a Response or ctx.json(...)."
+  )
 }

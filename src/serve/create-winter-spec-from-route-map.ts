@@ -2,6 +2,7 @@ import { getRouteMatcher } from "next-route-matcher"
 import { normalizeRouteMap } from "../lib/normalize-route-map.js"
 import { WinterSpecRouteFn } from "src/types/web-handler.js"
 import {
+  MakeRequestOptions,
   WinterSpecRouteBundle,
   WinterSpecOptions,
   makeRequestAgainstWinterSpec,
@@ -24,8 +25,8 @@ export const createWinterSpecFromRouteMap = (
   const winterSpec = {
     routeMatcher,
     routeMapWithHandlers,
-    makeRequest: async (req: Request) =>
-      makeRequestAgainstWinterSpec(winterSpec)(req),
+    makeRequest: async (req: Request, opts?: MakeRequestOptions) =>
+      makeRequestAgainstWinterSpec(winterSpec, opts)(req),
     ...winterSpecOptions,
   }
 
