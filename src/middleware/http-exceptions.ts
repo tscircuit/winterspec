@@ -70,3 +70,9 @@ export class ResponseValidationError extends WinterSpecMiddlewareError {
     super(formatZodError(error), 500)
   }
 }
+
+export class ResponseObjectNotAllowedError extends WinterSpecMiddlewareError {
+  constructor() {
+    super("Use ctx.json({...}) instead of returning an object directly.", 500)
+  }
+}

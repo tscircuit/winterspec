@@ -1,4 +1,4 @@
-import { ResponseValidationError } from "./http-exceptions.js"
+import { ResponseObjectNotAllowedError } from "./http-exceptions.js"
 import { Middleware } from "./types.js"
 import { RouteSpec } from "src/types/route-spec.js"
 
@@ -9,9 +9,7 @@ export const withResponseObjectCheck: Middleware<
   const rawResponse = await next(req, ctx)
 
   if (typeof rawResponse === "object" && !(rawResponse instanceof Response)) {
-    throw new Error(
-      "Use ctx.json({...}) instead of returning an object directly."
-    )
+    throw new ResponseObjectNotAllowedError()
   }
 
   return rawResponse
