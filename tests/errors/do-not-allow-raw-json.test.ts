@@ -2,6 +2,9 @@ import test from "ava"
 import { z } from "zod"
 import { getTestRoute } from "tests/fixtures/get-test-route.js"
 
+const rawResponseGuidance =
+  "Use ctx.json({...}) instead of returning an object directly"
+
 test("should throw an error when responding with raw JSON", async (t) => {
   const { axios } = await getTestRoute(t, {
     globalSpec: {
@@ -31,9 +34,46 @@ test("should throw an error when responding with raw JSON", async (t) => {
   const { data } = await axios.get("/", {
     validateStatus: () => true,
   })
-  t.true(
-    data.error.includes(
-      "Use ctx.json({...}) instead of returning an object directly"
-    )
-  )
+  t.true(data.error.includes(rawResponseGuidance))
 })
+
+const invalidRouteReturns: Array<[string, () => any]> = [
+  ["undefined", () => undefined],
+  ["null", () => null],
+  ["string", () => "hello"],
+  ["number", () => 1],
+  ["boolean", () => false],
+  ["symbol", () => Symbol("invalid-response")],
+  ["function", () => () => "hello"],
+]
+
+for (const [returnType, getReturnValue] of invalidRouteReturns) {
+  test(`should throw ctx.json guidance for ${returnType} route returns`, async (t) => {
+    const { axios } = await getTestRoute(t, {
+      globalSpec: {
+        authMiddleware: {},
+        beforeAuthMiddleware: [
+          async (req, ctx, next) => {
+            try {
+              return await next(req, ctx)
+            } catch (e: any) {
+              return Response.json({ error: e.message }, { status: 500 })
+            }
+          },
+        ],
+      },
+      routeSpec: {
+        methods: ["GET"],
+        jsonBody: z.any(),
+        jsonResponse: z.any(),
+      },
+      routePath: "/",
+      routeFn: () => getReturnValue(),
+    })
+
+    const { data } = await axios.get("/", {
+      validateStatus: () => true,
+    })
+    t.true(data.error.includes(rawResponseGuidance))
+  })
+}
