@@ -126,6 +126,7 @@ function serializeResponse(
 ): Middleware {
   return async (req, ctx, next) => {
     const rawResponse = await next(req, ctx)
+    assertValidResponseValue(rawResponse)
 
     const statusCode =
       rawResponse instanceof WinterSpecResponse
@@ -148,6 +149,32 @@ function serializeResponse(
       throw new ResponseValidationError(err)
     }
   }
+}
+
+function assertValidResponseValue(rawResponse: unknown): asserts rawResponse is SerializableToResponse | Response {
+  if (rawResponse == null) {
+    throw new Error(
+      "Route handlers must return a Response. If you are returning JSON, use ctx.json({...})."
+    )
+  }
+
+  if (typeof rawResponse === "object") {
+    if (
+      rawResponse instanceof Response ||
+      rawResponse instanceof WinterSpecResponse ||
+      "serializeToResponse" in rawResponse
+    ) {
+      return
+    }
+
+    throw new Error(
+      "Use ctx.json({...}) instead of returning an object directly."
+    )
+  }
+
+  throw new Error(
+    "Route handlers must return a Response. If you are returning JSON, use ctx.json({...})."
+  )
 }
 
 export async function wrapMiddlewares(
