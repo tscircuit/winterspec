@@ -13,12 +13,20 @@ export const withUnhandledExceptionHandling: Middleware<{
       logger.warn(
         "Caught unhandled HTTP exception thrown by WinterSpec provided middleware. Consider adding createWithDefaultExceptionHandling middleware to your global or route spec."
       )
-    } else {
-      logger.warn(
-        "Caught unknown unhandled exception; consider adding a exception handling middleware to your global or route spec."
+      logger.error(e)
+      return Response.json(
+        {
+          message: e.message,
+        },
+        {
+          status: e.status ?? 500,
+        }
       )
     }
 
+    logger.warn(
+      "Caught unknown unhandled exception; consider adding a exception handling middleware to your global or route spec."
+    )
     logger.error(e)
 
     return new Response(null, {
