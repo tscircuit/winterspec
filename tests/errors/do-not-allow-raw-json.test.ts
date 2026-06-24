@@ -1,6 +1,7 @@
 import test, { type ExecutionContext } from "ava"
 import { z } from "zod"
 import { getTestRoute } from "tests/fixtures/get-test-route.js"
+import { createWithDefaultExceptionHandling } from "src/middleware/with-default-exception-handling.js"
 import { RAW_RESPONSE_OBJECT_ERROR_MESSAGE } from "src/middleware/with-response-object-check.js"
 import type {
   SerializableToResponse,
@@ -84,6 +85,27 @@ test("should throw an error when responding with undefined", async (t) => {
   })
 
   assertInvalidRawReturnError(t, error)
+})
+
+test("should preserve raw return guidance through default exception handling", async (t) => {
+  const { axios } = await getTestRoute(t, {
+    globalSpec: {
+      authMiddleware: {},
+      beforeAuthMiddleware: [createWithDefaultExceptionHandling()],
+    },
+    routeSpec: {
+      methods: ["GET"],
+      jsonResponse: z.any(),
+    },
+    routePath: "/",
+    routeFn: () => ({ foo: "bar" }) as any,
+  })
+
+  const { data } = await axios.get("/", {
+    validateStatus: () => true,
+  })
+
+  assertInvalidRawReturnError(t, data.message)
 })
 
 test("should allow custom serializable response objects", async (t) => {
