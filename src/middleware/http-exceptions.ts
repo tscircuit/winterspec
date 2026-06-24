@@ -70,3 +70,9 @@ export class ResponseValidationError extends WinterSpecMiddlewareError {
     super(formatZodError(error), 500)
   }
 }
+
+export class RawRouteReturnError extends WinterSpecMiddlewareError {
+  constructor(message: string) {
+    super(message, 500)
+  }
+}
