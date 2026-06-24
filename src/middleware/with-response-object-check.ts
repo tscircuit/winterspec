@@ -1,4 +1,5 @@
 import { Middleware } from "./types.js"
+import { RawRouteReturnError } from "./http-exceptions.js"
 import { RouteSpec } from "src/types/route-spec.js"
 
 export const RAW_RESPONSE_OBJECT_ERROR_MESSAGE =
@@ -20,7 +21,7 @@ export function assertRouteReturnsResponse(rawResponse: unknown) {
     return
   }
 
-  throw new Error(
+  throw new RawRouteReturnError(
     `${RAW_RESPONSE_OBJECT_ERROR_MESSAGE} Route handlers must return a Response or ctx.json(...).`
   )
 }
