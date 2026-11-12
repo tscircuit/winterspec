@@ -6,7 +6,7 @@ export const normalizeRouteMap = (routeMap: Record<string, Function>) => {
       routeWithSlash = `/${route}`
     }
     normalizedRoutes[`${routeWithSlash.replace(/\.ts$/g, "")}`] = route
-    if (route.endsWith("index.ts")) {
+    if (route === "index.ts" || route.endsWith("/index.ts")) {
       normalizedRoutes[`${routeWithSlash.replace(/index\.ts$/g, "")}`] = route
     }
   }
