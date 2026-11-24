@@ -90,6 +90,13 @@ const parseQueryParams = (
 
   if (obj_schema) {
     for (const [key, value] of Object.entries(obj_schema.shape)) {
+      if (!isZodSchemaArray(value as z.ZodTypeAny)) {
+        const scalar_input = parsed_input[key]
+        if (Array.isArray(scalar_input)) {
+          parsed_input[key] = scalar_input[scalar_input.length - 1]
+        }
+      }
+
       if (isZodSchemaArray(value as z.ZodTypeAny)) {
         const array_input = input[key]
 
@@ -269,8 +276,17 @@ export const withInputValidation =
 
     // TODO eventually we should support multipart/form-data
 
+    const queryParamValues = new Map<string, string[]>()
+    for (const [key, value] of new URL(req.url).searchParams.entries()) {
+      const values = queryParamValues.get(key) ?? []
+      values.push(value)
+      queryParamValues.set(key, values)
+    }
     const originalParams = Object.fromEntries(
-      new URL(req.url).searchParams.entries()
+      Array.from(queryParamValues.entries()).map(([key, values]) => [
+        key,
+        values.length === 1 ? values[0] : values,
+      ])
     )
 
     let jsonBody: any
