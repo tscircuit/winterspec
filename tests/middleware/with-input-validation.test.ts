@@ -456,3 +456,32 @@ test("doesn't throw when body is optional", async (t) => {
     t.is(data.hello, "seam")
   }
 })
+
+test("parses repeated query params as arrays", async (t) => {
+  const { axios } = await getTestRoute(t, {
+    ...defaultSpecs,
+    routeSpec: {
+      auth: "none",
+      methods: ["GET"],
+      queryParams: z.object({
+        tag: z.array(z.string()),
+      }),
+      jsonResponse: z.object({
+        tags: z.array(z.string()),
+      }),
+    },
+    routeFn: (req) => {
+      return WinterSpecResponse.json({
+        tags: req.query.tag,
+      })
+    },
+    routePath: "/hello",
+  })
+
+  const { data, status } = await axios.get("/hello?tag=red&tag=blue", {
+    validateStatus: () => true,
+  })
+
+  t.is(status, 200)
+  t.deepEqual(data.tags, ["red", "blue"])
+})
